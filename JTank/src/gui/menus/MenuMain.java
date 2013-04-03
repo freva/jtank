@@ -1,5 +1,10 @@
 package gui.menus;
 
+import game.Game;
+import game.Level;
+import game.LevelImage;
+import gui.Main;
+
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
@@ -8,6 +13,8 @@ import java.awt.Font;
 import java.awt.GridBagLayout;
 import java.awt.GridBagConstraints;
 import java.awt.Insets;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 public class MenuMain extends AbstractMenu {
 	public MenuMain() {
@@ -17,15 +24,16 @@ public class MenuMain extends AbstractMenu {
 		gridBagLayout.rowHeights = new int[]{70, 150, 40, 40, 40, 70};
 		setLayout(gridBagLayout);
 		
-		ImageIcon logo = new ImageIcon("res/Logo.png");
+		JLabel logo = new JLabel(new ImageIcon("res/Logo.png"));
 		GridBagConstraints gbc_imageLogo = new GridBagConstraints();
 		gbc_imageLogo.insets = new Insets(0, 0, 20, 0);
 		gbc_imageLogo.gridx = 1;
 		gbc_imageLogo.gridy = 1;
-		add(new JLabel(logo), gbc_imageLogo);
+		add(logo, gbc_imageLogo);
 		
 		JButton btnSingleplayer = new JButton("Singleplayer");
 		btnSingleplayer.setFont(new Font("Tahoma", Font.PLAIN, 16));
+		btnSingleplayer.addActionListener(new Singleplayer());
 		GridBagConstraints gbc_btnSingleplayer = new GridBagConstraints();
 		gbc_btnSingleplayer.fill = GridBagConstraints.BOTH;
 		gbc_btnSingleplayer.insets = new Insets(5, 0, 5, 0);
@@ -50,5 +58,12 @@ public class MenuMain extends AbstractMenu {
 		gbc_btnOptions.gridx = 1;
 		gbc_btnOptions.gridy = 4;
 		add(btnOptions, gbc_btnOptions);
+	}
+	
+	class Singleplayer implements ActionListener {
+		public void actionPerformed(ActionEvent arg0) {
+			Main.main.hideMenu();
+			Main.main.add(new Game(new Level(LevelImage.KingKong)));
+		}
 	}
 }
