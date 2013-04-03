@@ -1,9 +1,14 @@
 package gui;
 
+import game.Game;
+import game.Level;
+import game.LevelImage;
 import gui.menus.AbstractMenu;
 import gui.menus.MenuMain;
 
 import java.awt.Color;
+import java.awt.Component;
+
 import javax.swing.JFrame;
 import javax.swing.JLayeredPane;
 
@@ -11,7 +16,7 @@ public class Main extends JFrame{
 	public static Main main;
 	public static final int GAME_WIDTH = 1280, GAME_HEIGHT = 720;
 	
-	private static String version = "r3";
+	private static String version = "r4";
 	private AbstractMenu menuMain;
 	private JLayeredPane lp;
 	
@@ -32,11 +37,14 @@ public class Main extends JFrame{
 	public void init(){
 		lp = new JLayeredPane();
 		menuMain = new MenuMain();
-		//menuMain.setVisible(false);
+		menuMain.setVisible(true);
 		
 		lp.add(menuMain, 1);
 		
 		main.getContentPane().add(lp);
+	}
 	
+	public void hideMenu(){
+		lp.setVisible(false);
 	}
 }
