@@ -24,7 +24,7 @@ public class MenuMain extends AbstractMenu {
 		gridBagLayout.rowHeights = new int[]{70, 150, 40, 40, 40, 70};
 		setLayout(gridBagLayout);
 		
-		JLabel logo = new JLabel(new ImageIcon("res/Logo.png"));
+		JLabel logo = new JLabel(new ImageIcon(Main.class.getResource("res/Logo.png")));
 		GridBagConstraints gbc_imageLogo = new GridBagConstraints();
 		gbc_imageLogo.insets = new Insets(0, 0, 20, 0);
 		gbc_imageLogo.gridx = 1;

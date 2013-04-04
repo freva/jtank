@@ -7,7 +7,6 @@ import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferByte;
-import java.io.File;
 import java.io.IOException;
 
 import javax.imageio.ImageIO;
@@ -20,7 +19,7 @@ public class Level {
 	
 	public Level(LevelData levelData){
 		try {
-			levelBuffered = ImageIO.read(new File(levelData.getLevelFilename()));
+			levelBuffered = ImageIO.read(levelData.getLevelFilename());
 		} catch (IOException e) { e.printStackTrace(); }
 
 		levelImageData = ((DataBufferByte) levelBuffered.getRaster().getDataBuffer()).getData();

@@ -13,17 +13,22 @@ public class Main{
 	public static JFrame mainFrame;
 	public static final int GAME_WIDTH = 1280, GAME_HEIGHT = 720;
 	
-	private static String version = "r5";
+	private static String version = "r6";
 	private AbstractMenu menuMain;
 	private JLayeredPane lp;
 	
 	public static void main(String[] args) {
-		main = new Main();		
+		main = new Main();
 		main.init();
 	}
 	
 	public void init(){
+		menuMain = new MenuMain();
+		lp = new JLayeredPane();
+		lp.add(menuMain, 1);
+
 		mainFrame = new JFrame();
+		mainFrame.add(lp);
 		mainFrame.setTitle("JTanks " + version);
 		mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		mainFrame.setVisible(true);
@@ -31,13 +36,6 @@ public class Main{
 		mainFrame.setResizable(false);
 		mainFrame.setLocationRelativeTo(null);
 		mainFrame.getContentPane().setBackground(Color.gray);
-		
-		
-		lp = new JLayeredPane();
-		menuMain = new MenuMain();
-
-		lp.add(menuMain, 1);
-		mainFrame.getContentPane().add(lp);
 	}
 	
 	public void hideMenu(){
