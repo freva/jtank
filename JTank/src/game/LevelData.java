@@ -1,5 +1,9 @@
 package game;
 
+import java.net.URL;
+
+import gui.Main;
+
 public enum LevelData {
 	KingKong("KingKong.png", "skies_bg.png"), 
 	Mantis("Mantis.png", "skies_bg.png"), 
@@ -11,10 +15,10 @@ public enum LevelData {
 		this.backgroundFilename = backgroundFilename;
 	}
 	
-	public String getLevelFilename() {
-		return "res/lvl/" + levelFilename;
+	public URL getLevelFilename() {
+		return Main.class.getResource("res/lvl/" + levelFilename);
 	}
-	public String getBackgroundFilename() {
-		return "res/lvl/" + backgroundFilename;
+	public URL getBackgroundFilename() {
+		return Main.class.getResource("res/lvl/" + backgroundFilename);
 	}
 }
