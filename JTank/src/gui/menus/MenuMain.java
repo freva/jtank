@@ -2,7 +2,7 @@ package gui.menus;
 
 import game.Game;
 import game.Level;
-import game.LevelImage;
+import game.LevelData;
 import gui.Main;
 
 import javax.swing.ImageIcon;
@@ -63,7 +63,7 @@ public class MenuMain extends AbstractMenu {
 	class Singleplayer implements ActionListener {
 		public void actionPerformed(ActionEvent arg0) {
 			Main.main.hideMenu();
-			Main.main.add(new Game(new Level(LevelImage.KingKong)));
+			Main.mainFrame.add(new Game(new Level(LevelData.KingKong)));
 		}
 	}
 }
