@@ -1,26 +1,26 @@
 package objects;
 
 import gui.Main;
+
+import java.awt.Polygon;
 import java.net.URL;
 
 public enum ObjectsData {
-	TANK("tank.png", new int[]{-26, -8, 7, 25}, new int[]{-12, 11, 11, -12});
+	//top left, top right, bottom right, bottom left
+	TANK("tank.png", new int[]{-8, 7, 25, -26}, new int[]{-12, -12, 11, 11});
 	
-	private int[] dimensionsX, dimensionsY;
 	private URL imageURL;
+	private Polygon polyObject;
 	private ObjectsData(String filename, int[] dimensionsX, int[] dimensionsY){
 		imageURL = Main.class.getResource("res/objects/" + filename);
-		this.dimensionsX = dimensionsX;
-		this.dimensionsY = dimensionsY;
+		polyObject = new Polygon(dimensionsX, dimensionsY, dimensionsX.length);
 	}
 	
-	public int[] getDimensionsX() {
-		return dimensionsX;
-	}
-	public int[] getDimensionsY() {
-		return dimensionsY;
-	}
 	public URL getImageURL() {
 		return imageURL;
+	}
+	
+	public Polygon getPolyObject() {
+		return polyObject;
 	}
 }
