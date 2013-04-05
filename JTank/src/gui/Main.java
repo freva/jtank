@@ -13,7 +13,7 @@ public class Main{
 	public static JFrame mainFrame;
 	public static final int GAME_WIDTH = 1280, GAME_HEIGHT = 720;
 	
-	private static String version = "r6";
+	private static String version = "r7";
 	private AbstractMenu menuMain;
 	private JLayeredPane lp;
 	
@@ -32,7 +32,7 @@ public class Main{
 		mainFrame.setTitle("JTanks " + version);
 		mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		mainFrame.setVisible(true);
-		mainFrame.setSize(GAME_WIDTH, GAME_HEIGHT);
+		mainFrame.setSize(GAME_WIDTH+6, GAME_HEIGHT+29);
 		mainFrame.setResizable(false);
 		mainFrame.setLocationRelativeTo(null);
 		mainFrame.getContentPane().setBackground(Color.gray);

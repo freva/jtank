@@ -28,24 +28,29 @@ public class Level {
 	}
 	
 	public void drawCircle(int x, int y, int radius){
-		int start = Main.GAME_WIDTH*(y-radius)+(x-radius), diam=radius<<1;
-		BufferedImage img = new BufferedImage(radius<<1, radius<<1, BufferedImage.TYPE_BYTE_GRAY);
+		int diam=radius<<1;
+		BufferedImage img = new BufferedImage(diam, diam, BufferedImage.TYPE_BYTE_GRAY);
 		Graphics2D g = img.createGraphics();
 		g.setColor(Color.white);
 		g.fillOval(0, 0, diam, diam);
 		g.drawImage(img, null, 0, 0);
 		
-		byte[] temp = ((DataBufferByte) img.getRaster().getDataBuffer()).getData();		
-		for(int i=0; i<diam; i++, start+=Main.GAME_WIDTH)
-			for(int j=0; j<diam; j++)
-				if(temp[diam*i+j] != 0) levelImageData[start+j]=-1;
-
-	    updateLevelImage(levelBuffered);
-	}
-
-	private void updateLevelImage(BufferedImage img){
-		levelImageData = ((DataBufferByte) img.getRaster().getDataBuffer()).getData();
-		levelImage = new ImageIcon(img);
+		byte[] temp = ((DataBufferByte) img.getRaster().getDataBuffer()).getData();
+		x -= radius;
+		y -= radius;
+		
+		int width = Main.GAME_WIDTH-x, height = Main.GAME_HEIGHT-y, startX = 0, startY = 0;
+		if(width > diam) width = diam;
+		if(height > diam) height = diam;
+		if(x < 0) startX = -x;
+		if(y < 0) startY = -y;
+	
+		int current = Main.GAME_WIDTH*(y+startY)+x;
+		for(int i=startY; i<height; i++, current+=Main.GAME_WIDTH)
+			for(int j=startX; j<width; j++)
+				if(temp[diam*i+j] != 0) levelImageData[current+j]=-1;
+		
+		levelImage = new ImageIcon(levelBuffered);
 	}
 	
 	public byte[] getLevelData(){
