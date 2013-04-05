@@ -1,20 +1,26 @@
 package objects;
 
+import java.awt.Graphics;
+import java.awt.Image;
+
+import javax.swing.ImageIcon;
+
 import gui.Main;
 
 public abstract class AbstractElementary {
-	private float x, y, dx, dy;
-	private int dt;
+	private float x, y, dx, dy, dt;
 	private boolean removed = false, falling=false;
+	protected Image image;
 	
-	public AbstractElementary(float x, float y){
+	public AbstractElementary(float x, float y, ObjectsData od){
 		this.x = x;
 		this.y = y;
+		image = new ImageIcon(ObjectsData.TANK.getImageURL()).getImage();
 	}
 	
 	public void tick(int dt){
-		this.dt = dt;
-		accelerate(0, 0.1f);
+		this.dt = dt/100.0f;
+		accelerate(0, 3);
 		move();
 		
 		if(x > Main.GAME_WIDTH+100 || x < -100 || y > Main.GAME_HEIGHT+100 || y < -100) this.removed = true;
@@ -45,12 +51,12 @@ public abstract class AbstractElementary {
 		this.dy += ddy*dt;
 	}
 
-	public float getX() {
-		return x;
+	public int getX() {
+		return (int) x;
 	}
 
-	public float getY() {
-		return y;
+	public int getY() {
+		return (int) y;
 	}
 
 	public boolean isRemoved() {
@@ -64,4 +70,6 @@ public abstract class AbstractElementary {
 	public boolean isFalling() {
 		return falling;
 	}
+	
+	public abstract void paint(Graphics g);
 }

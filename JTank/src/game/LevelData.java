@@ -9,16 +9,16 @@ public enum LevelData {
 	Mantis("Mantis.png", "skies_bg.png"), 
 	Medieval("Medieval.png", "skies_bg.png");
 	
-	private String levelFilename, backgroundFilename;
-	LevelData(String levelFilename, String backgroundFilename){
-		this.levelFilename = levelFilename;
-		this.backgroundFilename = backgroundFilename;
+	private URL levelFileURL, backgroundFileURL;
+	LevelData(String levelFileURL, String backgroundFileURL){
+		this.levelFileURL = Main.class.getResource("res/lvl/" + levelFileURL);
+		this.backgroundFileURL = Main.class.getResource("res/lvl/" + backgroundFileURL);
 	}
 	
-	public URL getLevelFilename() {
-		return Main.class.getResource("res/lvl/" + levelFilename);
+	public URL getLevelURL() {
+		return levelFileURL;
 	}
-	public URL getBackgroundFilename() {
-		return Main.class.getResource("res/lvl/" + backgroundFilename);
+	public URL getBackgroundURL() {
+		return backgroundFileURL;
 	}
 }
