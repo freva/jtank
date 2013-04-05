@@ -4,7 +4,6 @@ import gui.menus.AbstractMenu;
 import gui.menus.MenuMain;
 
 import java.awt.Color;
-
 import javax.swing.JFrame;
 import javax.swing.JLayeredPane;
 
@@ -13,7 +12,7 @@ public class Main{
 	public static JFrame mainFrame;
 	public static final int GAME_WIDTH = 1280, GAME_HEIGHT = 720;
 	
-	private static String version = "r7";
+	private static String version = "r8";
 	private AbstractMenu menuMain;
 	private JLayeredPane lp;
 	
@@ -32,10 +31,11 @@ public class Main{
 		mainFrame.setTitle("JTanks " + version);
 		mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		mainFrame.setVisible(true);
-		mainFrame.setSize(GAME_WIDTH+6, GAME_HEIGHT+29);
 		mainFrame.setResizable(false);
-		mainFrame.setLocationRelativeTo(null);
 		mainFrame.getContentPane().setBackground(Color.gray);
+		mainFrame.pack();
+		mainFrame.setSize(GAME_WIDTH+mainFrame.getInsets().left+mainFrame.getInsets().right, GAME_HEIGHT+mainFrame.getInsets().top+mainFrame.getInsets().bottom);
+		mainFrame.setLocationRelativeTo(null);
 	}
 	
 	public void hideMenu(){

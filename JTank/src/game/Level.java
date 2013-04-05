@@ -19,12 +19,12 @@ public class Level {
 	
 	public Level(LevelData levelData){
 		try {
-			levelBuffered = ImageIO.read(levelData.getLevelFilename());
+			levelBuffered = ImageIO.read(levelData.getLevelURL());
 		} catch (IOException e) { e.printStackTrace(); }
 
 		levelImageData = ((DataBufferByte) levelBuffered.getRaster().getDataBuffer()).getData();
-		levelImage = new ImageIcon(levelData.getLevelFilename());
-		backgroundImage = new ImageIcon(levelData.getBackgroundFilename());
+		levelImage = new ImageIcon(levelData.getLevelURL());
+		backgroundImage = new ImageIcon(levelData.getBackgroundURL());
 	}
 	
 	public void drawCircle(int x, int y, int radius){
@@ -34,6 +34,7 @@ public class Level {
 		g.setColor(Color.white);
 		g.fillOval(0, 0, diam, diam);
 		g.drawImage(img, null, 0, 0);
+		g.dispose();
 		
 		byte[] temp = ((DataBufferByte) img.getRaster().getDataBuffer()).getData();
 		x -= radius;
@@ -51,6 +52,10 @@ public class Level {
 				if(temp[diam*i+j] != 0) levelImageData[current+j]=-1;
 		
 		levelImage = new ImageIcon(levelBuffered);
+	}
+	
+	public boolean isGroundAt(int x, int y){
+		return levelImageData[Main.GAME_WIDTH*y+x] != -1;
 	}
 	
 	public byte[] getLevelData(){
