@@ -6,15 +6,15 @@ import java.awt.Polygon;
 
 import javax.swing.ImageIcon;
 
-import game.Game;
+import game.Level;
 import gui.Main;
 
 public abstract class AbstractElementary {
 	private float x, y, dx, dy, dt;
-	private boolean removed = false, falling=false;
+	private boolean isRemoved = false, isFalling=true;
 	protected Polygon polyObject;
 	protected Image image;
-	protected float damping = 0.6f;
+	protected float damping = 0.9f;
 	
 	public AbstractElementary(float x, float y, ObjectsData od){
 		this.x = x;
@@ -25,39 +25,35 @@ public abstract class AbstractElementary {
 	
 	public void tick(int dt){
 		this.dt = dt/100.0f;
-		accelerate(0, 3);		
+		
+		if(isFalling) accelerate(0, 3);		
 		move();
 		
 		checkGroundCollision();
 		
-		if(x > Main.GAME_WIDTH+100 || x < -100 || y > Main.GAME_HEIGHT+100 || y < -100) this.removed = true;
+		if(x > Main.GAME_WIDTH+100 || x < -100 || y > Main.GAME_HEIGHT+100 || y < -100) this.isRemoved = true;
 	}
 	
-	public void checkGroundCollision(){
-		boolean[] collision = new boolean[4];
-		boolean[] side = new boolean[4];
+	private void checkGroundCollision(){
+		boolean[] collision = getCollisionSides();
 		
-		for(int i=0; i<4; i++)
-			collision[i] = Game.getLevel().isGroundAt(getX()+polyObject.xpoints[i], getY()+polyObject.ypoints[i]);
+		if(!isFalling || !(collision[0] || collision[1] || collision [2] || collision[3])) return;
+		else do {
+			setRelativePosition(-Math.signum(dx), -Math.signum(dy));
+			collision = getCollisionSides();
+		} while(collision[0] || collision[1] || collision [2] || collision[3]);
 		
-		for(int i=0; i<4; i++)
-			side[i] = !(collision[i] || collision[(i+1)%4]);
 		
+		if(dx+dy < 5) {
+			setSpeed(0, 0);
+			isFalling=false;
+		} else multiplySpeed(-1*damping, -1*damping);
+	}
 	
-		float xMul=1/damping, yMul=1/damping, dx=0, dy=0;
-		if((side[0] && !side[2]) || (!side[0] && side[2])){
-			yMul=-1;
-			dy = -this.dy;
-		}
-		if((side[1] && !side[3]) || (!side[1] && side[3])){
-			xMul=-1;
-			dx = -this.dx;
-		}
-
-		setPosition(x+dx, y+dy);
-		multiplySpeed(xMul*damping, yMul*damping);
-		if(dx < 5) dx=0;
-		if(dy < 5) dy=0;
+	private boolean[] getCollisionSides() {
+		boolean[] collision = new boolean[4];
+		for(int i=0; i<4; i++) collision[i] = Level.getInstance().isGroundAt(getX()+polyObject.xpoints[i], getY()+polyObject.ypoints[i]);
+		return collision;
 	}
 	
 	public boolean collidesWith(AbstractElementary other, boolean checkTwoWay){
@@ -77,6 +73,11 @@ public abstract class AbstractElementary {
 	public void setPosition(float x, float y){
 		this.x=x;
 		this.y=y;
+	}
+	
+	public void setRelativePosition(float dx, float dy){
+		this.x += dx;
+		this.y += dy;
 	}
 	
 	public void setSpeed(float dx, float dy){
@@ -113,15 +114,7 @@ public abstract class AbstractElementary {
 	}
 
 	public boolean isRemoved() {
-		return removed;
-	}
-
-	public void setFalling(boolean falling){
-		this.falling = falling;
-	}
-	
-	public boolean isFalling() {
-		return falling;
+		return isRemoved;
 	}
 	
 	public abstract void paint(Graphics g);
