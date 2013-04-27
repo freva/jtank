@@ -16,16 +16,24 @@ public class Level {
 	private ImageIcon levelImage, backgroundImage;
 	private BufferedImage levelBuffered;
 	private byte[] levelImageData;
+	private static Level level;
 	
-	public Level(LevelData levelData){
+	public static void setInstance(LevelData levelData){
+		level = new Level();
 		try {
-			levelBuffered = ImageIO.read(levelData.getLevelURL());
+			level.levelBuffered = ImageIO.read(levelData.getLevelURL());
 		} catch (IOException e) { e.printStackTrace(); }
 
-		levelImageData = ((DataBufferByte) levelBuffered.getRaster().getDataBuffer()).getData();
-		levelImage = new ImageIcon(levelData.getLevelURL());
-		backgroundImage = new ImageIcon(levelData.getBackgroundURL());
+		level.levelImageData = ((DataBufferByte) level.levelBuffered.getRaster().getDataBuffer()).getData();
+		level.levelImage = new ImageIcon(levelData.getLevelURL());
+		level.backgroundImage = new ImageIcon(levelData.getBackgroundURL());
 	}
+	
+	public static Level getInstance(){
+		return level;
+	}
+	
+	private Level(){}
 	
 	public void drawCircle(int x, int y, int radius){
 		int diam=radius<<1;

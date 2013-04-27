@@ -62,8 +62,10 @@ public class MenuMain extends AbstractMenu {
 	
 	class Singleplayer implements ActionListener {
 		public void actionPerformed(ActionEvent arg0) {
+			Level.setInstance(LevelData.KingKong);
+			
 			Main.main.hideMenu();
-			Main.mainFrame.add(new Game(new Level(LevelData.KingKong)));
+			Main.mainFrame.add(new Game(Level.getInstance()));
 		}
 	}
 }

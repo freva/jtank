@@ -11,13 +11,11 @@ import objects.Tank;
 import objects.AbstractElementary;
 
 public class Game extends JPanel implements MouseListener, Runnable {
-	private static Level level;
 	private Tank player;
 	private ArrayList<AbstractElementary> objects = new ArrayList<AbstractElementary>();
 	private int dTime = 1, minFPS = 30;
 	
 	public Game(Level level){
-		Game.setLevel(level);
 		addMouseListener(this);
 		
 		player = new Tank(350, 100);
@@ -50,8 +48,8 @@ public class Game extends JPanel implements MouseListener, Runnable {
 	
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
-        g.drawImage(getLevel().getBackgroundImage(), 0, 0, null);
-        g.drawImage(getLevel().getLevelImage(), 0, 0, null);
+        g.drawImage(Level.getInstance().getBackgroundImage(), 0, 0, null);
+        g.drawImage(Level.getInstance().getLevelImage(), 0, 0, null);
         
         for(AbstractElementary ae : objects) ae.paint(g);
         
@@ -64,15 +62,7 @@ public class Game extends JPanel implements MouseListener, Runnable {
 	public void mousePressed(MouseEvent arg0) {}
 	
 	public void mouseReleased(MouseEvent arg0) {
-		getLevel().drawCircle(arg0.getX(), arg0.getY(), 50);
+		Level.getInstance().drawCircle(arg0.getX(), arg0.getY(), 50);
 		repaint();
-	}
-
-	public static Level getLevel() {
-		return Game.level;
-	}
-
-	public static void setLevel(Level level) {
-		Game.level = level;
 	}
 }
