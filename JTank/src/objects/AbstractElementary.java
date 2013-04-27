@@ -28,7 +28,6 @@ public abstract class AbstractElementary {
 		
 		if(isFalling) accelerate(0, 3);		
 		move();
-		
 		checkGroundCollision();
 		
 		if(x > Main.GAME_WIDTH+100 || x < -100 || y > Main.GAME_HEIGHT+100 || y < -100) this.isRemoved = true;
