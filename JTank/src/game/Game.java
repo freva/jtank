@@ -3,8 +3,6 @@ package game;
 import game.controls.PlayerControls;
 
 import java.awt.Graphics;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 import java.util.ArrayList;
 
 import javax.swing.ActionMap;
@@ -15,16 +13,14 @@ import javax.swing.KeyStroke;
 import objects.Tank;
 import objects.AbstractElementary;
 
-public class Game extends JPanel implements MouseListener, Runnable {
+public class Game extends JPanel implements Runnable {
 	private static Tank player;
-	private ArrayList<AbstractElementary> objects = new ArrayList<AbstractElementary>();
+	private static ArrayList<AbstractElementary> objects = new ArrayList<AbstractElementary>();
 	private int dTime = 1, minFPS = 30;
 	private InputMap inputMap = this.getInputMap(JPanel.WHEN_IN_FOCUSED_WINDOW);
     private ActionMap actionMap = this.getActionMap();
 	
-	public Game(Level level){
-		addMouseListener(this);
-		
+	public Game(Level level){	
 		player = new Tank(350, 100);
 		objects.add(player);
 		
@@ -40,7 +36,7 @@ public class Game extends JPanel implements MouseListener, Runnable {
 		while(true){
 			startTime = System.currentTimeMillis();
 			
-	        for(AbstractElementary ae : objects) ae.tick(dTime);
+	        for(int j=0; j<objects.size(); j++) objects.get(j).tick(dTime);
 	        repaint();
 	        
 			if(System.currentTimeMillis()-startTime < minFPS){
@@ -57,7 +53,16 @@ public class Game extends JPanel implements MouseListener, Runnable {
 	
 	private void bindGameKeys(){
 		inputMap.put(KeyStroke.getKeyStroke("UP"), "UpArrow");
+		inputMap.put(KeyStroke.getKeyStroke("DOWN"), "DownArrow");
+		inputMap.put(KeyStroke.getKeyStroke("LEFT"), "LeftArrow");
+		inputMap.put(KeyStroke.getKeyStroke("RIGHT"), "RightArrow");
+		inputMap.put(KeyStroke.getKeyStroke("SPACE"), "Space");
+		
 		actionMap.put("UpArrow", new PlayerControls(1));
+		actionMap.put("DownArrow", new PlayerControls(2));
+		actionMap.put("LeftArrow", new PlayerControls(3));
+		actionMap.put("RightArrow", new PlayerControls(4));
+		actionMap.put("Space", new PlayerControls(5));
 	}
 	
     protected void paintComponent(Graphics g) {
@@ -73,14 +78,12 @@ public class Game extends JPanel implements MouseListener, Runnable {
     public static Tank getPlayer(){
     	return player;
     }
-
-	public void mouseClicked(MouseEvent arg0) {}
-	public void mouseEntered(MouseEvent arg0) {}
-	public void mouseExited(MouseEvent arg0) {}
-	public void mousePressed(MouseEvent arg0) {}
-	
-	public void mouseReleased(MouseEvent arg0) {
-		Level.getInstance().drawCircle(arg0.getX(), arg0.getY(), 50);
-		repaint();
-	}
+    
+    public static void addElement(AbstractElementary ae){
+    	objects.add(ae);
+    }
+    
+    public static void removeElement(AbstractElementary ae){
+    	objects.remove(ae);
+    }
 }
