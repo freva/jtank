@@ -4,8 +4,6 @@ import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.Polygon;
 
-import javax.swing.ImageIcon;
-
 import game.Game;
 import game.Level;
 import gui.Main;
@@ -18,7 +16,7 @@ public abstract class AbstractElementary {
 	public AbstractElementary(float x, float y, DataInterface di){
 		this.x = x;
 		this.y = y;
-		image = new ImageIcon(di.getImageURL()).getImage();
+		image = di.getImage();
 		polyObject = di.getPolyObject();
 	}
 	

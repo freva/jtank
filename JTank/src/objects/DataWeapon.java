@@ -2,24 +2,36 @@ package objects;
 
 import gui.Main;
 
+import java.awt.Image;
 import java.awt.Polygon;
-import java.net.URL;
+import java.io.IOException;
+
+import javax.imageio.ImageIO;
 
 public enum DataWeapon implements DataInterface {
-	BULLET("bullet.png", new int[]{-2, 2, 2, -2}, new int[]{-2, -2, 2, 2}, 10, 50);
+	BULLET("bullet.png", "bulletIcon.png", new int[]{-2, 2, 2, -2}, new int[]{-2, -2, 2, 2}, 10, -1),
+	GRENADE("grenade.png", "grenade.png",  new int[]{-6, 5, 5, -6}, new int[]{-7, -7, 7, 7}, 20, 1000);
 	
-	private URL imageURL;
+	private Image image, imageIcon;
 	private Polygon polyObject;
-	private int power, speed;
-	private DataWeapon(String filename, int[] dimensionsX, int[] dimensionsY, int power, int speed){
-		imageURL = Main.class.getResource("res/objects/" + filename);
+	private int power, lifeTime;
+	private DataWeapon(String filename, String filenameIcon, int[] dimensionsX, int[] dimensionsY, int power, int lifeTime){
+		try {
+			image = ImageIO.read(Main.class.getResource("res/objects/" + filename));
+			imageIcon = ImageIO.read(Main.class.getResource("res/objects/" + filenameIcon));
+		} catch (IOException e) { e.printStackTrace(); }
+		
 		polyObject = new Polygon(dimensionsX, dimensionsY, dimensionsX.length);
 		this.power = power;
-		this.speed = speed;
+		this.lifeTime = lifeTime;
 	}
 	
-	public URL getImageURL() {
-		return imageURL;
+	public Image getImage() {
+		return image;
+	}
+	
+	public Image getImageIcon() {
+		return imageIcon;
 	}
 	
 	public Polygon getPolyObject() {
@@ -30,7 +42,7 @@ public enum DataWeapon implements DataInterface {
 		return power;
 	}
 
-	public int getSpeed() {
-		return speed;
+	public int getLifeTime() {
+		return lifeTime;
 	}
 }

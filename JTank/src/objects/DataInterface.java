@@ -1,9 +1,9 @@
 package objects;
 
+import java.awt.Image;
 import java.awt.Polygon;
-import java.net.URL;
 
 public interface DataInterface {
-	public URL getImageURL();
+	public Image getImage();
 	public Polygon getPolyObject();
 }

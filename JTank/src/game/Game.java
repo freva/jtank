@@ -72,7 +72,7 @@ public class Game extends JPanel implements Runnable {
         
         for(AbstractElementary ae : objects) ae.paint(g);
         
-        g.drawString("FPS: " + 1000/dTime, 10, 10);
+        g.drawString("FPS: " + 1000/dTime, 10, 15);
     }
     
     public static Tank getPlayer(){
