@@ -3,12 +3,14 @@ package objects;
 import game.Game;
 import game.Level;
 
-public class AbstractWeapon extends AbstractElementary {
-	protected int speed, power;
+public class Weapon extends AbstractElementary {
+	protected int lifeTime, power;
 	
-	public AbstractWeapon(float x, float y, DataWeapon dw) {
+	public Weapon(float x, float y, float deg, float speed, DataWeapon dw) {
 		super(x, y, dw);
-		this.speed = dw.getSpeed();
+		setSpeed((float) Math.cos(deg)*speed, (float) Math.sin(deg)*speed);
+		
+		this.lifeTime = dw.getLifeTime();
 		this.power = dw.getPower();
 	}
 
