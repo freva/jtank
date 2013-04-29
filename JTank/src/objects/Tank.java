@@ -13,17 +13,16 @@ import javax.imageio.ImageIO;
 public class Tank extends AbstractElementary {
 	private float deg = 0;
 	private Image crosshair, sign, heart;
-	private int maxSpeed = 8, cooldown = 300, hitpoints = 150, crosshairDist = 80, crosshairX, crosshairY;
+	private int maxSpeed = 6, cooldown = 300, hitpoints = 150, crosshairDist = 80, crosshairX = 64, crosshairY = -16, currentWeapon = 0;
 	private long lastShot = 0, lastShift = 0;
 	private String username;
+	private boolean moved = false;
 	private ArrayList<WeaponInventory> weapons = new ArrayList<WeaponInventory>();
-	private int currentWeapon = 0;
 	
 	public Tank(float x, float y){
 		super(x, y, DataObject.TANK);
 		collisionDamping=0.4f;
-		rotate(0);
-		setSpeed(10, 10);
+		setSpeed(20, 0);
 		username = "Limon";
 		
 		weapons.add(new WeaponInventory(-1, DataWeapon.BULLET));
@@ -43,9 +42,9 @@ public class Tank extends AbstractElementary {
 	}
 	
 	public void accelMove(float dSpeed){
+		if(Math.abs(dx+dSpeed) > maxSpeed) return;
 		dx += dSpeed;
-		if(Math.abs(dy) < 3) dy = -2;
-		if(dx > maxSpeed) dx = maxSpeed;
+		moved = true;
 	}
 	
 	public void fireWeapon(int strength) {
@@ -68,6 +67,22 @@ public class Tank extends AbstractElementary {
 		if(System.currentTimeMillis() - lastShift < cooldown) return;
 		currentWeapon = (currentWeapon+1)%weapons.size();
 		lastShift = System.currentTimeMillis();
+	}
+	
+	@Override
+	protected void checkGroundCollision() {
+		if(moved){
+			float tempY = y;
+			boolean[] collision = getCollisionSides();
+			
+			for(int i=0; i<5 && (collision[0] || collision[1] || collision [2] || collision[3]); i++, y--) collision = getCollisionSides();
+			
+			if((collision[0] || collision[1] || collision [2] || collision[3])) {
+				y=tempY;
+				super.checkGroundCollision();	
+			}
+			moved = false;
+		} else super.checkGroundCollision();
 	}
 
 	public void paint(Graphics g) {
