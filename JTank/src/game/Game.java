@@ -4,9 +4,9 @@ import game.controls.PlayerControls;
 import gui.animation.Animation;
 
 import java.awt.Graphics;
-import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import javax.swing.JPanel;
+import javax.swing.JProgressBar;
 
 import objects.Tank;
 import objects.AbstractElementary;
@@ -15,13 +15,16 @@ public class Game extends JPanel implements Runnable {
 	private static Tank player;
 	private static ArrayList<AbstractElementary> objects = new ArrayList<AbstractElementary>();
 	private static ArrayList<Animation> animations = new ArrayList<Animation>();
-	private int dTime = 1, minFPS = 30;
+	private int dTime = 1, minFPS = 10;
 	private PlayerControls input = new PlayerControls();
+	private JProgressBar progress;
 	
 	public Game(){	
 		player = new Tank(550, 100);
 		objects.add(player);
-		
+		progress = new JProgressBar(JProgressBar.VERTICAL, 0, 80);
+		this.add(progress);
+
 		Thread t = new Thread(this);
 		t.start();
 	}
@@ -64,6 +67,10 @@ public class Game extends JPanel implements Runnable {
         for(int i=0; i<animations.size(); i++) animations.get(i).drawFrame(g);
     
         g.drawString("FPS: " + 1000/dTime, 10, 15);
+        progress.setLocation(20, 550);
+        
+        int timeDown = player.trimStrength((int) (System.currentTimeMillis()-input.getTimeKeyDown(32)))-10;
+        progress.setValue(timeDown);
     }
     
     public static Tank getPlayer(){
