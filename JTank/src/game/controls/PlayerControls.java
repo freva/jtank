@@ -10,7 +10,7 @@ public class PlayerControls implements KeyListener {
 	private long[] duration= new long[256];
 	
 	//Move left, angle up, move right, angle down, fire
-	private int[] playerControls = new int[]{37, 38, 39, 40, 32};
+	private int[] playerControls = new int[]{37, 38, 39, 40, 32, 16};
 
 	public void keyPressed(KeyEvent arg0) {
 		if(!pressed[arg0.getKeyCode()]){
@@ -24,9 +24,7 @@ public class PlayerControls implements KeyListener {
 		pressed[arg0.getKeyCode()] = false;
 	}
 
-	public void keyTyped(KeyEvent arg0) {
-	
-	}
+	public void keyTyped(KeyEvent arg0) { }
 	
 	public void checkInput(){
 		if(pressed[playerControls[0]]) Game.getPlayer().accelMove(-3);
@@ -37,5 +35,6 @@ public class PlayerControls implements KeyListener {
 			Game.getPlayer().fireWeapon((int) duration[playerControls[4]]);
 			duration[playerControls[4]] = 0;
 		}
+		if(pressed[playerControls[5]]) Game.getPlayer().nextWeapon();
 	}
 }

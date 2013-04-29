@@ -9,8 +9,8 @@ import java.io.IOException;
 import javax.imageio.ImageIO;
 
 public enum DataWeapon implements DataInterface {
-	BULLET("bullet.png", "bulletIcon.png", new int[]{-2, 2, 2, -2}, new int[]{-2, -2, 2, 2}, 10, -1),
-	GRENADE("grenade.png", "grenade.png",  new int[]{-6, 5, 5, -6}, new int[]{-7, -7, 7, 7}, 20, 1000);
+	BULLET("bullet.png", "bulletIcon.png", new int[]{-2, 2, 2, -2}, new int[]{-2, -2, 2, 2}, 15, 0),
+	GRENADE("grenade.png", "grenade.png",  new int[]{-6, 5, 5, -6}, new int[]{-7, -7, 7, 7}, 30, 5000);
 	
 	private Image image, imageIcon;
 	private Polygon polyObject;
