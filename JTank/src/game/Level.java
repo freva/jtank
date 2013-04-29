@@ -19,7 +19,7 @@ public class Level {
 	private static Level level;
 	
 	public static void setInstance(LevelData levelData){
-		level = new Level();
+		if(level == null) level = new Level();
 		try {
 			level.levelBuffered = ImageIO.read(levelData.getLevelURL());
 		} catch (IOException e) { e.printStackTrace(); }
@@ -32,8 +32,6 @@ public class Level {
 	public static Level getInstance(){
 		return level;
 	}
-	
-	private Level(){}
 	
 	public void drawCircle(int x, int y, int radius){
 		int diam=radius<<1;
@@ -78,4 +76,6 @@ public class Level {
 	public Image getLevelImage(){
 		return levelImage.getImage();
 	}
+	
+	private Level(){}
 }

@@ -1,14 +1,11 @@
 package game;
 
 import game.controls.PlayerControls;
+import gui.Main;
 
 import java.awt.Graphics;
 import java.util.ArrayList;
-
-import javax.swing.ActionMap;
-import javax.swing.InputMap;
 import javax.swing.JPanel;
-import javax.swing.KeyStroke;
 
 import objects.Tank;
 import objects.AbstractElementary;
@@ -17,25 +14,24 @@ public class Game extends JPanel implements Runnable {
 	private static Tank player;
 	private static ArrayList<AbstractElementary> objects = new ArrayList<AbstractElementary>();
 	private int dTime = 1, minFPS = 30;
-	private InputMap inputMap = this.getInputMap(JPanel.WHEN_IN_FOCUSED_WINDOW);
-    private ActionMap actionMap = this.getActionMap();
+	private PlayerControls input = new PlayerControls();
 	
-	public Game(Level level){	
+	public Game(){	
 		player = new Tank(350, 100);
 		objects.add(player);
 		
 		Thread t = new Thread(this);
 		t.start();
-		
-		bindGameKeys();
 	}
 	
 	public void run(){
 		long startTime = System.currentTimeMillis();
+		bindGameKeys();
 		
 		while(true){
 			startTime = System.currentTimeMillis();
 			
+			input.checkInput();
 	        for(int j=0; j<objects.size(); j++) objects.get(j).tick(dTime);
 	        repaint();
 	        
@@ -51,18 +47,10 @@ public class Game extends JPanel implements Runnable {
 		}
 	}
 	
-	private void bindGameKeys(){
-		inputMap.put(KeyStroke.getKeyStroke("UP"), "UpArrow");
-		inputMap.put(KeyStroke.getKeyStroke("DOWN"), "DownArrow");
-		inputMap.put(KeyStroke.getKeyStroke("LEFT"), "LeftArrow");
-		inputMap.put(KeyStroke.getKeyStroke("RIGHT"), "RightArrow");
-		inputMap.put(KeyStroke.getKeyStroke("SPACE"), "Space");
-		
-		actionMap.put("UpArrow", new PlayerControls(1));
-		actionMap.put("DownArrow", new PlayerControls(2));
-		actionMap.put("LeftArrow", new PlayerControls(3));
-		actionMap.put("RightArrow", new PlayerControls(4));
-		actionMap.put("Space", new PlayerControls(5));
+	private void bindGameKeys() {
+		this.setFocusable(true);
+		this.requestFocus();
+		this.addKeyListener(input);
 	}
 	
     protected void paintComponent(Graphics g) {

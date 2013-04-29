@@ -43,9 +43,14 @@ public class Tank extends AbstractElementary {
 		if(dx > maxSpeed) dx = maxSpeed;
 	}
 	
-	public void fireWeapon() {
+	public void fireWeapon(int strength) {
 		if(System.currentTimeMillis() - lastShot < cooldown) return;
-		Game.addElement(new Weapon(x, y, deg, 50, currentWeapon));
+		
+		strength = strength>>4;
+		if(strength < 10) strength = 10;
+		if(strength > 60) strength = 90;
+		
+		Game.addElement(new Weapon(x, y, deg, strength, currentWeapon));
 		lastShot = System.currentTimeMillis();
 	}
 
