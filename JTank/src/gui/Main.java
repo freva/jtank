@@ -12,7 +12,7 @@ public class Main{
 	public static JFrame mainFrame;
 	public static final int GAME_WIDTH = 1280, GAME_HEIGHT = 720;
 	
-	private static String version = "r16";
+	private static String version = "r17";
 	private AbstractMenu menuMain;
 	private JLayeredPane lp;
 	

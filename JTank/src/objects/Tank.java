@@ -49,10 +49,7 @@ public class Tank extends AbstractElementary {
 	
 	public void fireWeapon(int strength) {
 		if(System.currentTimeMillis() - lastShot < cooldown) return;
-		
-		strength = strength>>4;
-		if(strength < 10) strength = 10;
-		if(strength > 90) strength = 90;
+		strength = trimStrength(strength);
 		
 		weapons.get(currentWeapon).fire(x, y, deg, strength);
 		lastShot = System.currentTimeMillis();
@@ -61,6 +58,13 @@ public class Tank extends AbstractElementary {
 			weapons.remove(currentWeapon);
 			currentWeapon = (currentWeapon+1)%weapons.size();
 		}
+	}
+	
+	public int trimStrength(int strength){
+		strength = strength>>4;
+		if(strength < 10) strength = 10;
+		if(strength > 90) strength = 90;
+		return strength;
 	}
 	
 	public void nextWeapon(){
