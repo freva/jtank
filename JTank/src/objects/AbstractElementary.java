@@ -9,7 +9,7 @@ import game.Level;
 import gui.Main;
 
 public abstract class AbstractElementary {
-	protected float x, y, dx, dy, dt, collisionDamping = 0.9f, groundFriction = 0.6f;
+	protected float x, y, dx, dy, dt, collisionDamping = 0.6f, groundFriction = 0.6f;
 	protected Polygon polyObject;
 	protected Image image;
 	

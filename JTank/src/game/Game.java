@@ -1,7 +1,6 @@
 package game;
 
 import game.controls.PlayerControls;
-import gui.Main;
 
 import java.awt.Graphics;
 import java.util.ArrayList;
