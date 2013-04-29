@@ -65,7 +65,7 @@ public class MenuMain extends AbstractMenu {
 			Level.setInstance(LevelData.KingKong);
 			
 			Main.main.hideMenu();
-			Main.mainFrame.add(new Game(Level.getInstance()));
+			Main.mainFrame.add(new Game());
 		}
 	}
 }
