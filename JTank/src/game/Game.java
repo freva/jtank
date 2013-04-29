@@ -1,8 +1,10 @@
 package game;
 
 import game.controls.PlayerControls;
+import gui.animation.Animation;
 
 import java.awt.Graphics;
+import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import javax.swing.JPanel;
 
@@ -12,11 +14,12 @@ import objects.AbstractElementary;
 public class Game extends JPanel implements Runnable {
 	private static Tank player;
 	private static ArrayList<AbstractElementary> objects = new ArrayList<AbstractElementary>();
+	private static ArrayList<Animation> animations = new ArrayList<Animation>();
 	private int dTime = 1, minFPS = 30;
 	private PlayerControls input = new PlayerControls();
 	
 	public Game(){	
-		player = new Tank(350, 100);
+		player = new Tank(550, 100);
 		objects.add(player);
 		
 		Thread t = new Thread(this);
@@ -58,7 +61,8 @@ public class Game extends JPanel implements Runnable {
         g.drawImage(Level.getInstance().getLevelImage(), 0, 0, null);
         
         for(AbstractElementary ae : objects) ae.paint(g);
-        
+        for(int i=0; i<animations.size(); i++) animations.get(i).drawFrame(g);
+    
         g.drawString("FPS: " + 1000/dTime, 10, 15);
     }
     
@@ -72,5 +76,13 @@ public class Game extends JPanel implements Runnable {
     
     public static void removeElement(AbstractElementary ae){
     	objects.remove(ae);
+    }
+    
+    public static void addAnimation(Animation ani){
+    	animations.add(ani);
+    }
+    
+    public static void removeAnimation(Animation ani){
+    	animations.remove(ani);
     }
 }
