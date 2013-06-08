@@ -9,13 +9,24 @@ import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.awt.Menu;
+
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 import javax.swing.JSeparator;
+
+import tools.Validator;
+
+import networking.Client;
+import networking.Server;
+
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import java.net.ConnectException;
+import java.net.InetAddress;
+import java.util.regex.Pattern;
 
 
 public class MenuMultiplayer extends AbstractMenu {
@@ -142,8 +153,16 @@ public class MenuMultiplayer extends AbstractMenu {
 	
 	class ButtonJoinGame implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
-			if(NicknameField.getText().length() == 0) {
-				JOptionPane.showMessageDialog(Main.mainFrame, "Please enter a nickname", "Error", JOptionPane.ERROR_MESSAGE);
+			if(NicknameField.getText().length() == 0) JOptionPane.showMessageDialog(Main.mainFrame, "Please enter a nickname", "Error", JOptionPane.ERROR_MESSAGE);
+			else {
+				if(Validator.isValidIPv4(IPAddressField.getText())){
+					try {
+						new Client(IPAddressField.getText(), NicknameField.getText());
+						Main.main.hideMenu();
+					} catch (ConnectException e1) {
+						JOptionPane.showMessageDialog(Main.mainFrame, "Could not reach " + IPAddressField.getText(), "Error", JOptionPane.ERROR_MESSAGE);
+					}
+				} else JOptionPane.showMessageDialog(Main.mainFrame, "Invalid IPv4 address!", "Error", JOptionPane.ERROR_MESSAGE);
 			}
 		}
 	}
@@ -154,9 +173,11 @@ public class MenuMultiplayer extends AbstractMenu {
 				JOptionPane.showMessageDialog(Main.mainFrame, "Please enter a nickname", "Error", JOptionPane.ERROR_MESSAGE);
 			} else {
 				Level.setInstance(LevelData.Mantis);
+				Game game = new Game(true, NicknameField.getText());
 				
 				Main.main.hideMenu();
-				Main.mainFrame.add(new Game(true, NicknameField.getText()));
+				Main.mainFrame.add(game);
+				Server.startServer(game);
 			}
 		}
 	}

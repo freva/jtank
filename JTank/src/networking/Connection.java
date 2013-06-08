@@ -1,6 +1,7 @@
 package networking;
 
 import game.Game;
+import game.Level;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -9,6 +10,7 @@ import java.io.PrintWriter;
 import java.net.Socket;
 import java.net.SocketException;
 import objects.Tank;
+import tools.Base64Coder;
 
 public class Connection implements Runnable {
     private Socket socket;
@@ -33,7 +35,11 @@ public class Connection implements Runnable {
             
             user = new Tank(100, 100, inputReader.readLine());
             Game.addElement(user);
-
+            System.out.println(user.getUsername() + " has connected");
+            
+            outputWriter.println(Base64Coder.encodeLines(Level.getInstance().getBackgroundByteArray()));
+            outputWriter.println(Base64Coder.encodeLines(Level.getInstance().getLevelByteArray()));
+            
     		while((receivedData = inputReader.readLine()) != null){
     			System.out.println(receivedData);
     		}
