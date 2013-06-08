@@ -18,12 +18,14 @@ public class Game extends JPanel implements Runnable {
 	private int dTime = 1, minFPS = 10;
 	private PlayerControls input = new PlayerControls();
 	private JProgressBar progress;
+	private boolean isHost;
 	
-	public Game(){	
-		player = new Tank(550, 100);
+	public Game(boolean isHost, String nickname){	
+		player = new Tank(550, 100, nickname);
 		objects.add(player);
 		progress = new JProgressBar(JProgressBar.VERTICAL, 0, 80);
 		this.add(progress);
+		this.isHost = isHost;
 
 		Thread t = new Thread(this);
 		t.start();
@@ -37,7 +39,7 @@ public class Game extends JPanel implements Runnable {
 			startTime = System.currentTimeMillis();
 			
 			input.checkInput();
-	        for(int j=0; j<objects.size(); j++) objects.get(j).tick(dTime);
+	        if(isHost) for(int j=0; j<objects.size(); j++) objects.get(j).tick(dTime);
 	        repaint();
 	        
 			if(System.currentTimeMillis()-startTime < minFPS){
@@ -67,10 +69,10 @@ public class Game extends JPanel implements Runnable {
         for(int i=0; i<animations.size(); i++) animations.get(i).drawFrame(g);
     
         g.drawString("FPS: " + 1000/dTime, 10, 15);
-        progress.setLocation(20, 550);
         
         int timeDown = player.trimStrength((int) (System.currentTimeMillis()-input.getTimeKeyDown(32)))-10;
         progress.setValue(timeDown);
+        progress.setLocation(20, 550);
     }
     
     public static Tank getPlayer(){
