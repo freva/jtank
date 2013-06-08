@@ -5,9 +5,12 @@ import game.Level;
 import game.LevelData;
 import gui.Main;
 
+import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
+
+import tools.Base64Coder;
 
 import java.awt.Font;
 import java.awt.GridBagLayout;
@@ -15,6 +18,12 @@ import java.awt.GridBagConstraints;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.image.BufferedImage;
+import java.awt.image.DataBufferByte;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.util.Arrays;
 
 public class MenuMain extends AbstractMenu {
 	public MenuMain() {	
@@ -51,6 +60,7 @@ public class MenuMain extends AbstractMenu {
 		add(btnMultiplayer, gbc_btnMultiplayer);
 		
 		JButton btnOptions = new JButton("Options");
+		btnOptions.addActionListener(new Options());
 		btnOptions.setFont(new Font("Tahoma", Font.PLAIN, 16));
 		GridBagConstraints gbc_btnOptions = new GridBagConstraints();
 		gbc_btnOptions.fill = GridBagConstraints.BOTH;
@@ -72,6 +82,12 @@ public class MenuMain extends AbstractMenu {
 	class Multiplayer implements ActionListener {
 		public void actionPerformed(ActionEvent arg0) {
 			Main.main.addMenuToForeground(new MenuMultiplayer());
+		}
+	}
+	
+	class Options implements ActionListener {
+		public void actionPerformed(ActionEvent arg0) {
+			
 		}
 	}
 }

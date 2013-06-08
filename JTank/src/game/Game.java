@@ -39,7 +39,8 @@ public class Game extends JPanel implements Runnable {
 			startTime = System.currentTimeMillis();
 			
 			input.checkInput();
-	        if(isHost) for(int j=0; j<objects.size(); j++) objects.get(j).tick(dTime);
+	       // if(isHost) 
+	        	for(int j=0; j<objects.size(); j++) objects.get(j).tick(dTime);
 	        repaint();
 	        
 			if(System.currentTimeMillis()-startTime < minFPS){

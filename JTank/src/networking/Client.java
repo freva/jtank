@@ -1,5 +1,9 @@
 package networking;
 
+import game.Game;
+import game.Level;
+import gui.Main;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -7,19 +11,24 @@ import java.io.PrintWriter;
 import java.net.ConnectException;
 import java.net.Socket;
 
+import tools.Base64Coder;
+
 public class Client {
 	private PrintWriter outputWriter;
 	private BufferedReader inputReader;
-	private String server = "localhost", receivedData;
+	private String receivedData;
 	
-	public Client(String username) throws ConnectException{
+	public Client(String server, String username) throws ConnectException{
 	     try{
 	    	 Socket socket = new Socket(server, 10001);
 	    	 outputWriter = new PrintWriter(socket.getOutputStream(), true);
 	    	 inputReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 	    	 
-		     sendMessage(username);		     
-	     }catch(ConnectException e){ throw new ConnectException("Kunne ikke koble til " + server);
+		     sendMessage(username);
+
+		     Level.setInstance(Base64Coder.decode(inputReader.readLine()), Base64Coder.decode(inputReader.readLine()));
+		     Main.mainFrame.add(new Game(false, username));
+	     }catch(ConnectException e){ throw new ConnectException();
 	     }catch(IOException e){e.printStackTrace();}
 	    
 	     Thread l = new Thread(new ClientListener());

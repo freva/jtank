@@ -4,17 +4,16 @@ import gui.Main;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
-import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferByte;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
 import javax.imageio.ImageIO;
-import javax.swing.ImageIcon;
 
 public class Level {
-	private ImageIcon levelImage, backgroundImage;
-	private BufferedImage levelBuffered;
+	public BufferedImage levelBuffered, backgroundBuffered;
 	private byte[] levelImageData;
 	private static Level level;
 	
@@ -22,11 +21,22 @@ public class Level {
 		if(level == null) level = new Level();
 		try {
 			level.levelBuffered = ImageIO.read(levelData.getLevelURL());
+			level.backgroundBuffered = ImageIO.read(levelData.getBackgroundURL());
 		} catch (IOException e) { e.printStackTrace(); }
 
 		level.levelImageData = ((DataBufferByte) level.levelBuffered.getRaster().getDataBuffer()).getData();
-		level.levelImage = new ImageIcon(levelData.getLevelURL());
-		level.backgroundImage = new ImageIcon(levelData.getBackgroundURL());
+	}
+	
+	public static void setInstance(byte[] bgData, byte[] levelData){
+		if(level == null) level = new Level();	
+		try {
+			level.backgroundBuffered = ImageIO.read(new ByteArrayInputStream(bgData));
+			level.levelBuffered = ImageIO.read(new ByteArrayInputStream(levelData));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+		level.levelImageData = ((DataBufferByte) level.levelBuffered.getRaster().getDataBuffer()).getData();
 	}
 	
 	public static Level getInstance(){
@@ -56,8 +66,6 @@ public class Level {
 		for(int i=startY; i<height; i++, current+=Main.GAME_WIDTH)
 			for(int j=startX; j<width; j++)
 				if(temp[diam*i+j] != 0) levelImageData[current+j]=-1;
-		
-		levelImage = new ImageIcon(levelBuffered);
 	}
 	
 	public boolean isGroundAt(int x, int y){
@@ -69,12 +77,34 @@ public class Level {
 		return levelImageData;
 	}
 	
-	public Image getBackgroundImage(){
-		return backgroundImage.getImage();
+	public byte[] getLevelByteArray() {
+		ByteArrayOutputStream baos = new ByteArrayOutputStream();
+		try {
+			ImageIO.write(level.levelBuffered, "png", baos);
+		} catch (IOException e1) {
+			e1.printStackTrace();
+		}
+
+		return baos.toByteArray();
 	}
 	
-	public Image getLevelImage(){
-		return levelImage.getImage();
+	public byte[] getBackgroundByteArray() {
+		ByteArrayOutputStream baos = new ByteArrayOutputStream();
+		try {
+			ImageIO.write(level.backgroundBuffered, "png", baos);
+		} catch (IOException e1) {
+			e1.printStackTrace();
+		}
+
+		return baos.toByteArray();
+	}
+
+	public BufferedImage getBackgroundImage(){
+		return level.backgroundBuffered;
+	}
+	
+	public BufferedImage getLevelImage(){
+		return level.levelBuffered;
 	}
 	
 	private Level(){}
