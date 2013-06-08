@@ -19,11 +19,11 @@ public class Tank extends AbstractElementary {
 	private boolean moved = false;
 	private ArrayList<WeaponInventory> weapons = new ArrayList<WeaponInventory>();
 	
-	public Tank(float x, float y){
+	public Tank(float x, float y, String username){
 		super(x, y, DataObject.TANK);
 		collisionDamping=0.4f;
 		setSpeed(20, 0);
-		username = "Limon";
+		this.username = username;
 		
 		weapons.add(new WeaponInventory(-1, DataWeapon.BULLET));
 		weapons.add(new WeaponInventory(5, DataWeapon.GRENADE));
@@ -102,5 +102,9 @@ public class Tank extends AbstractElementary {
 		g.drawString(weapons.get(currentWeapon).getAmountString(), offsetX+74, offsetY+36);
 		
 		g.drawImage(crosshair, this.getX() + crosshairX, this.getY() + crosshairY, null);
+	}
+	
+	public String getUsername() {
+		return username;
 	}
 }

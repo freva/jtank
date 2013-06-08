@@ -17,8 +17,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 public class MenuMain extends AbstractMenu {
-	public MenuMain() {
-		
+	public MenuMain() {	
 		GridBagLayout gridBagLayout = new GridBagLayout();
 		gridBagLayout.columnWidths = new int[]{135, 230, 135};
 		gridBagLayout.rowHeights = new int[]{70, 190, 40, 40, 40, 70};
@@ -43,6 +42,7 @@ public class MenuMain extends AbstractMenu {
 		
 		JButton btnMultiplayer = new JButton("Multiplayer");
 		btnMultiplayer.setFont(new Font("Tahoma", Font.PLAIN, 16));
+		btnMultiplayer.addActionListener(new Multiplayer());
 		GridBagConstraints gbc_btnMultiplayer = new GridBagConstraints();
 		gbc_btnMultiplayer.fill = GridBagConstraints.BOTH;
 		gbc_btnMultiplayer.insets = new Insets(5, 0, 5, 0);
@@ -65,7 +65,13 @@ public class MenuMain extends AbstractMenu {
 			Level.setInstance(LevelData.Mantis);
 			
 			Main.main.hideMenu();
-			Main.mainFrame.add(new Game());
+			Main.mainFrame.add(new Game(true, "Limon"));
+		}
+	}
+	
+	class Multiplayer implements ActionListener {
+		public void actionPerformed(ActionEvent arg0) {
+			Main.main.addMenuToForeground(new MenuMultiplayer());
 		}
 	}
 }

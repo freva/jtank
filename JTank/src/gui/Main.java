@@ -2,6 +2,7 @@ package gui;
 
 import gui.menus.AbstractMenu;
 import gui.menus.MenuMain;
+import gui.menus.MenuMultiplayer;
 
 import java.awt.Color;
 import javax.swing.JFrame;
@@ -10,9 +11,9 @@ import javax.swing.JLayeredPane;
 public class Main{
 	public static Main main;
 	public static JFrame mainFrame;
-	public static final int GAME_WIDTH = 1280, GAME_HEIGHT = 720;
+	public static final int GAME_WIDTH = 1280, GAME_HEIGHT = 720, maxNumPlayers=10;
 	
-	private static String version = "r17";
+	private static String version = "r18";
 	private AbstractMenu menuMain;
 	private JLayeredPane lp;
 	
@@ -24,7 +25,7 @@ public class Main{
 	public void init(){
 		menuMain = new MenuMain();
 		lp = new JLayeredPane();
-		lp.add(menuMain, 1);
+		lp.add(menuMain, new Integer(0));
 
 		mainFrame = new JFrame();
 		mainFrame.add(lp);
@@ -40,5 +41,14 @@ public class Main{
 	
 	public void hideMenu(){
 		lp.setVisible(false);
+	}
+	
+	public void addMenuToForeground(AbstractMenu am){
+		lp.add(am, new Integer(lp.highestLayer()+1));
+	}
+	
+	public void removeTopMenu() {
+		lp.remove(new Integer(lp.highestLayer()-1));
+		lp.repaint();
 	}
 }
