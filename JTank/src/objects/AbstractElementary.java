@@ -60,8 +60,6 @@ public abstract class AbstractElementary {
 		
 		if(xMul==1 && dy < 10) multiplySpeed(groundFriction, groundFriction);
 		else multiplySpeed(xMul*collisionDamping, yMul*collisionDamping);
-		//else setSpeed(0, 0);
-		
 	}
 	
 	protected boolean[] getCollisionSides() {
@@ -131,7 +129,9 @@ public abstract class AbstractElementary {
 		g.drawImage(image, this.getX()+polyObject.xpoints[3], this.getY()+polyObject.ypoints[0], null);
 	}
 	
+	public abstract String getElementID();
+	
 	public String toString() {
-		return id + "@" + getX() + "@" + getY() + "@" + dx + "@" + dy;
+		return getElementID() + "@" + id + "@" + getX() + "@" + getY() + "@" + dx + "@" + dy;
 	}
 }

@@ -105,6 +105,7 @@ public class Tank extends AbstractElementary {
 	
 	public void setDeg(float deg){
 		this.deg = deg;
+		rotate(0);
 	}
 	
 	public void setCurrentWeapon(int currentWeapon){
@@ -116,6 +117,10 @@ public class Tank extends AbstractElementary {
 	}
 	
 	public String toString(){
-		return super.toString() + "@" + username + "@" + deg + "@" + currentWeapon + "@" + weapons[currentWeapon].getAmount();
+		return super.toString() + "@" + deg + "@" + currentWeapon + "@" + weapons[currentWeapon].getAmount();
+	}
+	
+	public String getElementID() {
+		return username;
 	}
 }
