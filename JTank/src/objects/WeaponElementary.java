@@ -7,6 +7,7 @@ import gui.animation.Animation;
 public class WeaponElementary extends AbstractElementary {
 	private long startTime;
 	private DataWeapon dw;
+	private String elementID;
 	
 	public WeaponElementary(float x, float y, float deg, float speed, DataWeapon dw) {
 		super(x, y, dw);
@@ -14,14 +15,16 @@ public class WeaponElementary extends AbstractElementary {
 
 		this.dw = dw;
 		this.startTime = System.currentTimeMillis();
+		this.elementID = Game.getPlayer().getElementID() + (System.currentTimeMillis()%10000);
 	}
 	
-	public WeaponElementary(float x, float y, float dx, float dy, DataWeapon dw, long startTime){
+	public WeaponElementary(float x, float y, float dx, float dy, DataWeapon dw, String elementID){
 		super(x, y, dw);
 		setSpeed(dx, dy);
 		
 		this.dw = dw;
-		this.startTime = startTime;
+		this.startTime = startTime+5000;
+		this.elementID = elementID;
 	}
 
 	protected void explode() {
@@ -45,8 +48,8 @@ public class WeaponElementary extends AbstractElementary {
 				}
 		}
 	}
-	
-	public String toString() {
-		return super.toString() + "@" + startTime;
+
+	public String getElementID() {
+		return elementID;
 	}
 }

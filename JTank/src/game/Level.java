@@ -57,9 +57,7 @@ public class Level {
 		byte[] temp = null;
 		try {
 			ImageIO.write(level.levelBuffered, "png", baos);
-			baos.flush();
 			temp = baos.toByteArray();
-			baos.close();
 		} catch (IOException e1) {
 			e1.printStackTrace();
 		}
@@ -72,9 +70,7 @@ public class Level {
 		byte[] temp = null;
 		try {
 			ImageIO.write(level.backgroundBuffered, "png", baos);
-			baos.flush();
 			temp = baos.toByteArray();
-			baos.close();
 		} catch (IOException e1) {
 			e1.printStackTrace();
 		}

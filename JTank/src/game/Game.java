@@ -5,26 +5,29 @@ import gui.animation.Animation;
 
 import java.awt.Graphics;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.concurrent.ConcurrentHashMap;
+
 import javax.swing.JPanel;
 import javax.swing.JProgressBar;
+
+import networking.Client;
 
 import objects.Tank;
 import objects.AbstractElementary;
 
 public class Game extends JPanel implements Runnable {
 	private static Tank player;
-	private static ArrayList<AbstractElementary> objects = new ArrayList<AbstractElementary>();
+	private static ConcurrentHashMap<String, AbstractElementary> objects = new ConcurrentHashMap<String, AbstractElementary>();
 	private static ArrayList<Animation> animations = new ArrayList<Animation>();
 	private int dTime = 1, minFPS = 10;
 	private PlayerControls input = new PlayerControls();
 	private JProgressBar progress;
 	
 	public Game(boolean isHost, String nickname){	
-		if(isHost) {
-			player = new Tank(550, 100, nickname);
-			objects.add(player);
-		}
-		
+		player = new Tank(550, 100, nickname);
+		objects.put(nickname, player);
+
 		progress = new JProgressBar(JProgressBar.VERTICAL, 0, 80);
 		this.add(progress);
 
@@ -40,7 +43,7 @@ public class Game extends JPanel implements Runnable {
 			startTime = System.currentTimeMillis();
 			
 			input.checkInput();
-			for(int j=0; j<objects.size(); j++) objects.get(j).tick(dTime);
+			for(AbstractElementary ae : objects.values()) ae.tick(dTime);
 	        repaint();
 
 	        if(System.currentTimeMillis()-startTime < minFPS){
@@ -66,7 +69,7 @@ public class Game extends JPanel implements Runnable {
         g.drawImage(Level.getInstance().getBackgroundImage(), 0, 0, null);
         g.drawImage(Level.getInstance().getLevelImage(), 0, 0, null);
         
-        for(AbstractElementary ae : objects) ae.paint(g);
+        for(AbstractElementary ae : objects.values()) ae.paint(g);
         for(int i=0; i<animations.size(); i++) animations.get(i).drawFrame(g);
     
         g.drawString("FPS: " + 1000/dTime, 10, 15);
@@ -85,15 +88,20 @@ public class Game extends JPanel implements Runnable {
     }
     
     public static void addElement(AbstractElementary ae){
-    	objects.add(ae);
+    	objects.put(ae.getElementID(), ae);
+    	if(ae.getElementID().indexOf(player.getUsername()) == 0) Client.addUpdate("1£" + ae.toString());
     }
     
     public static void removeElement(AbstractElementary ae){
-    	objects.remove(ae);
+    	objects.remove(ae.getElementID());
     }
     
-    public static ArrayList<AbstractElementary> getElements() {
-    	return objects;
+    public static AbstractElementary getElement(String elementID){
+    	return objects.get(elementID);
+    }
+    
+    public static Collection<AbstractElementary> getElements() {
+    	return objects.values();
     }
     
     public static void addAnimation(Animation ani){

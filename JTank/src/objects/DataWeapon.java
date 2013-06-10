@@ -17,6 +17,7 @@ public enum DataWeapon implements DataInterface {
 	private Polygon polyObject;
 	private int power, lifeTime, id;
 	private DataAnimation da;
+	private static DataWeapon[] weapons = new DataWeapon[] {null, DataWeapon.BULLET, DataWeapon.GRENADE};
 	private DataWeapon(int id, String filename, String filenameIcon, int[] dimensionsX, int[] dimensionsY, int power, int lifeTime, DataAnimation da){
 		try {
 			image = ImageIO.read(Main.class.getResource("res/objects/" + filename));
@@ -56,5 +57,10 @@ public enum DataWeapon implements DataInterface {
 
 	public int getID() {
 		return id;
+	}
+	
+	public static DataWeapon getWeapon(int id){
+		if(id < 1 || id >= weapons.length) return null;
+		else return weapons[id];
 	}
 }

@@ -15,8 +15,7 @@ public class Server implements Runnable {
     private Server() {}
     
     public static void startServer() {
-    	Thread t = new Thread(new Server());
-    	t.start();
+    	new Thread(new Server()).start();
     }
     
 	public static void sendToEveryone(String msg) {
@@ -37,20 +36,19 @@ public class Server implements Runnable {
 	@Override
 	public void run() {
 		 try {        	
-	            serverSocket = new ServerSocket(10001);
+			 serverSocket = new ServerSocket(10001);
 
-	            while(true) {
-	                Socket socket = serverSocket.accept();
-	                if(connectionSize == Main.maxNumPlayers-1) continue;
+			 while(true) {
+				 Socket socket = serverSocket.accept();
+				 if(connectionSize == Main.maxNumPlayers-1) continue;
 	                
-	                service = new Connection(socket);
-	                Thread t = new Thread(service);
-	                t.start();
+				 service = new Connection(socket);
+				 new Thread(service).start();
 	                
-	                connections[connectionSize++] = service;
-	            }
-	        } catch (IOException e) {
-	            e.printStackTrace();
-	        }
+				 connections[connectionSize++] = service;
+			 }
+		 } catch (IOException e) {
+			 e.printStackTrace();
+		 }
 	}
 }

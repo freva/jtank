@@ -18,7 +18,7 @@ public class Connection implements Runnable {
     private Socket socket;
     private PrintWriter outputWriter;
     private BufferedReader inputReader;
-	private Tank user;
+    private String username;
 	private StringBuilder sb = new StringBuilder();
 
 	/* Code User
@@ -36,9 +36,8 @@ public class Connection implements Runnable {
     		outputWriter = new PrintWriter(socket.getOutputStream(), true);
             inputReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
             
-            user = new Tank(100, 100, inputReader.readLine());
-            Game.addElement(user);
-            System.out.println(user.getUsername() + " has connected");
+            username = inputReader.readLine();
+            System.out.println(username + " has connected");
             
             outputWriter.println(Base64Coder.encodeLines(Level.getInstance().getBackgroundByteArray()));
             outputWriter.println(Base64Coder.encodeLines(Level.getInstance().getLevelByteArray()));
@@ -51,15 +50,26 @@ public class Connection implements Runnable {
             outputWriter.println(sb.toString());
             
     		while((receivedData = inputReader.readLine()) != null){
-    			System.out.println(receivedData);
+    			String[] data = receivedData.split("%");
+    			
+    			for(int i=0; i<data.length; i++){
+    				String[] temp = data[i].split("£");
+    				
+    				switch(Integer.parseInt(temp[0])){
+        			case 1:
+        				ObjectUpdater.interpretObject(temp[1]);
+        			break;
+        			
+        			}
+    			}
     		}
     		
     		socket.close();
     	} catch (SocketException e) { e.printStackTrace();
     	} catch (IOException e) { e.printStackTrace();
         } finally {
-    		System.out.println("Closing connection with " + user.getUsername());
-        	Server.removeClientFromList(user.getUsername());
+    		System.out.println("Closing connection with " + username);
+        	Server.removeClientFromList(username);
     	}
     }
     
@@ -68,6 +78,6 @@ public class Connection implements Runnable {
     }
     
     public String getUsername() {
-    	return user.getUsername();
+    	return username;
     }
  }
