@@ -5,7 +5,7 @@ import game.Level;
 import gui.animation.Animation;
 
 public class WeaponElementary extends AbstractElementary {
-	private long starTime;
+	private long startTime;
 	private DataWeapon dw;
 	
 	public WeaponElementary(float x, float y, float deg, float speed, DataWeapon dw) {
@@ -13,7 +13,15 @@ public class WeaponElementary extends AbstractElementary {
 		setSpeed((float) Math.cos(deg)*speed, (float) Math.sin(deg)*speed);
 
 		this.dw = dw;
-		this.starTime = System.currentTimeMillis();
+		this.startTime = System.currentTimeMillis();
+	}
+	
+	public WeaponElementary(float x, float y, float dx, float dy, DataWeapon dw, long startTime){
+		super(x, y, dw);
+		setSpeed(dx, dy);
+		
+		this.dw = dw;
+		this.startTime = startTime;
 	}
 
 	protected void explode() {
@@ -26,7 +34,7 @@ public class WeaponElementary extends AbstractElementary {
 		if(dw.getLifeTime() != 0) {
 			super.checkGroundCollision();
 			
-			if(System.currentTimeMillis()-starTime > dw.getLifeTime()) explode();
+			if(System.currentTimeMillis()-startTime > dw.getLifeTime()) explode();
 		} else {
 			boolean[] collision = getCollisionSides();
 			
@@ -36,5 +44,9 @@ public class WeaponElementary extends AbstractElementary {
 					return;
 				}
 		}
+	}
+	
+	public String toString() {
+		return super.toString() + "@" + startTime;
 	}
 }

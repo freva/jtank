@@ -6,7 +6,6 @@ import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Image;
 import java.io.IOException;
-import java.util.ArrayList;
 
 import javax.imageio.ImageIO;
 
@@ -17,16 +16,13 @@ public class Tank extends AbstractElementary {
 	private long lastShot = 0, lastShift = 0;
 	private String username;
 	private boolean moved = false;
-	private ArrayList<WeaponInventory> weapons = new ArrayList<WeaponInventory>();
+	private WeaponInventory[] weapons = new WeaponInventory[] {new WeaponInventory(-1, DataWeapon.BULLET), new WeaponInventory(5, DataWeapon.GRENADE)};
 	
 	public Tank(float x, float y, String username){
 		super(x, y, DataObject.TANK);
 		collisionDamping=0.4f;
 		setSpeed(20, 0);
 		this.username = username;
-		
-		weapons.add(new WeaponInventory(-1, DataWeapon.BULLET));
-		weapons.add(new WeaponInventory(5, DataWeapon.GRENADE));
 		
 		try {
 			crosshair = ImageIO.read(Main.class.getResource("res/objects/crosshair.png"));
@@ -50,14 +46,11 @@ public class Tank extends AbstractElementary {
 	public void fireWeapon(int strength) {
 		if(System.currentTimeMillis() - lastShot < cooldown) return;
 		strength = trimStrength(strength);
-		
-		weapons.get(currentWeapon).fire(x, y, deg, strength);
+
+		weapons[currentWeapon].fire(x, y, deg, strength);
 		lastShot = System.currentTimeMillis();
 		
-		if(!weapons.get(currentWeapon).isMore()) {
-			weapons.remove(currentWeapon);
-			currentWeapon = (currentWeapon+1)%weapons.size();
-		}
+		while(!weapons[currentWeapon].isMore()) currentWeapon = (currentWeapon+1)%weapons.length;
 	}
 	
 	public int trimStrength(int strength){
@@ -69,7 +62,9 @@ public class Tank extends AbstractElementary {
 	
 	public void nextWeapon(){
 		if(System.currentTimeMillis() - lastShift < cooldown) return;
-		currentWeapon = (currentWeapon+1)%weapons.size();
+		do {
+			currentWeapon = (currentWeapon+1)%weapons.length;
+		} while(!weapons[currentWeapon].isMore());
 		lastShift = System.currentTimeMillis();
 	}
 	
@@ -98,13 +93,29 @@ public class Tank extends AbstractElementary {
 		g.drawString(username, offsetX+5, offsetY+17);
 		g.drawImage(heart, offsetX+4, offsetY+21, null);
 		g.drawString("" + hitpoints, offsetX+19, offsetY+36);
-		g.drawImage(weapons.get(currentWeapon).getImageIcon(), offsetX+55, offsetY+21, null);
-		g.drawString(weapons.get(currentWeapon).getAmountString(), offsetX+74, offsetY+36);
+		g.drawImage(weapons[currentWeapon].getImageIcon(), offsetX+55, offsetY+21, null);
+		g.drawString(weapons[currentWeapon].getAmountString(), offsetX+74, offsetY+36);
 		
 		g.drawImage(crosshair, this.getX() + crosshairX, this.getY() + crosshairY, null);
 	}
 	
 	public String getUsername() {
 		return username;
+	}
+	
+	public void setDeg(float deg){
+		this.deg = deg;
+	}
+	
+	public void setCurrentWeapon(int currentWeapon){
+		this.currentWeapon = currentWeapon;
+	}
+	
+	public void setAmmoForWeapon(int weaponID, int amount){
+		weapons[weaponID].setAmount(amount);
+	}
+	
+	public String toString(){
+		return super.toString() + "@" + username + "@" + deg + "@" + currentWeapon + "@" + weapons[currentWeapon].getAmount();
 	}
 }

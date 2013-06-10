@@ -20,6 +20,10 @@ public class WeaponInventory {
 		}
 	}
 
+	public void setAmount(int amount){
+		this.amount = amount;
+	}
+	
 	public boolean isMore() {
 		return amount != 0;
 	}
@@ -27,6 +31,10 @@ public class WeaponInventory {
 	public String getAmountString(){
 		if(amount > 0) return "" + amount;
 		else return "-";
+	}
+	
+	public int getAmount(){
+		return amount;
 	}
 	
 	public Image getImageIcon() {

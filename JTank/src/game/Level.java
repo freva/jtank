@@ -2,10 +2,9 @@ package game;
 
 import gui.Main;
 
-import java.awt.Color;
+import java.awt.AlphaComposite;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
-import java.awt.image.DataBufferByte;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -14,7 +13,6 @@ import javax.imageio.ImageIO;
 
 public class Level {
 	public BufferedImage levelBuffered, backgroundBuffered;
-	private byte[] levelImageData;
 	private static Level level;
 	
 	public static void setInstance(LevelData levelData){
@@ -23,20 +21,16 @@ public class Level {
 			level.levelBuffered = ImageIO.read(levelData.getLevelURL());
 			level.backgroundBuffered = ImageIO.read(levelData.getBackgroundURL());
 		} catch (IOException e) { e.printStackTrace(); }
-
-		level.levelImageData = ((DataBufferByte) level.levelBuffered.getRaster().getDataBuffer()).getData();
 	}
 	
 	public static void setInstance(byte[] bgData, byte[] levelData){
-		if(level == null) level = new Level();	
+		if(level == null) level = new Level();
 		try {
 			level.backgroundBuffered = ImageIO.read(new ByteArrayInputStream(bgData));
 			level.levelBuffered = ImageIO.read(new ByteArrayInputStream(levelData));
 		} catch (IOException e) {
 			e.printStackTrace();
-		}
-		
-		level.levelImageData = ((DataBufferByte) level.levelBuffered.getRaster().getDataBuffer()).getData();
+		}		
 	}
 	
 	public static Level getInstance(){
@@ -44,59 +38,48 @@ public class Level {
 	}
 	
 	public void drawCircle(int x, int y, int radius){
-		int diam=radius<<1;
-		BufferedImage img = new BufferedImage(diam, diam, BufferedImage.TYPE_BYTE_GRAY);
-		Graphics2D g = img.createGraphics();
-		g.setColor(Color.white);
-		g.fillOval(0, 0, diam, diam);
-		g.drawImage(img, null, 0, 0);
-		g.dispose();
-		
-		byte[] temp = ((DataBufferByte) img.getRaster().getDataBuffer()).getData();
-		x -= radius;
-		y -= radius;
-		
-		int width = Main.GAME_WIDTH-x, height = Main.GAME_HEIGHT-y, startX = 0, startY = 0;
-		if(width > diam) width = diam;
-		if(height > diam) height = diam;
-		if(x < 0) startX = -x;
-		if(y < 0) startY = -y;
-	
-		int current = Main.GAME_WIDTH*(y+startY)+x;
-		for(int i=startY; i<height; i++, current+=Main.GAME_WIDTH)
-			for(int j=startX; j<width; j++)
-				if(temp[diam*i+j] != 0) levelImageData[current+j]=-1;
+		Graphics2D g = levelBuffered.createGraphics();
+		try {
+		    g.setComposite(AlphaComposite.Clear);
+		    g.fillOval(x-radius, y-radius, radius<<1, radius<<1);
+		} finally {
+		    g.dispose();
+		}
 	}
 	
 	public boolean isGroundAt(int x, int y){
 		if(x<0 || y<0 || x>=Main.GAME_WIDTH || y>=Main.GAME_HEIGHT) return false;
-		return levelImageData[Main.GAME_WIDTH*y+x] != -1;
-	}
-	
-	public byte[] getLevelData(){
-		return levelImageData;
+		return (levelBuffered.getRGB(x, y)>>24) != 0;
 	}
 	
 	public byte[] getLevelByteArray() {
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
+		byte[] temp = null;
 		try {
 			ImageIO.write(level.levelBuffered, "png", baos);
+			baos.flush();
+			temp = baos.toByteArray();
+			baos.close();
 		} catch (IOException e1) {
 			e1.printStackTrace();
 		}
 
-		return baos.toByteArray();
+		return temp;
 	}
 	
 	public byte[] getBackgroundByteArray() {
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
+		byte[] temp = null;
 		try {
 			ImageIO.write(level.backgroundBuffered, "png", baos);
+			baos.flush();
+			temp = baos.toByteArray();
+			baos.close();
 		} catch (IOException e1) {
 			e1.printStackTrace();
 		}
 
-		return baos.toByteArray();
+		return temp;
 	}
 
 	public BufferedImage getBackgroundImage(){
