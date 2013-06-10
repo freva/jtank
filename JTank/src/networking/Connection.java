@@ -9,6 +9,8 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
 import java.net.SocketException;
+
+import objects.AbstractElementary;
 import objects.Tank;
 import tools.Base64Coder;
 
@@ -17,6 +19,7 @@ public class Connection implements Runnable {
     private PrintWriter outputWriter;
     private BufferedReader inputReader;
 	private Tank user;
+	private StringBuilder sb = new StringBuilder();
 
 	/* Code User
 	 * 0 - Message
@@ -39,6 +42,13 @@ public class Connection implements Runnable {
             
             outputWriter.println(Base64Coder.encodeLines(Level.getInstance().getBackgroundByteArray()));
             outputWriter.println(Base64Coder.encodeLines(Level.getInstance().getLevelByteArray()));
+            
+            for(AbstractElementary ae : Game.getElements()){
+            	sb.append(ae.toString());
+            	sb.append("£");
+            }
+            
+            outputWriter.println(sb.toString());
             
     		while((receivedData = inputReader.readLine()) != null){
     			System.out.println(receivedData);

@@ -12,16 +12,14 @@ public abstract class AbstractElementary {
 	protected float x, y, dx, dy, dt, collisionDamping = 0.6f, groundFriction = 0.6f;
 	protected Polygon polyObject;
 	protected Image image;
-	private int elementID;
-	
-	private static int lastElement=0;
+	private int id;
 	
 	public AbstractElementary(float x, float y, DataInterface di){
 		this.x = x;
 		this.y = y;
+		this.id = di.getID();
 		image = di.getImage();
 		polyObject = di.getPolyObject();
-		elementID = lastElement++;
 	}
 	
 	public void tick(int dt){
@@ -129,19 +127,11 @@ public abstract class AbstractElementary {
 		return (int) y;
 	}
 	
-	public int getElementID(){
-		return elementID;
-	}
-
-	public void setElementID(int id){
-		elementID = id;
-	}
-	
 	public void paint(Graphics g) {
 		g.drawImage(image, this.getX()+polyObject.xpoints[3], this.getY()+polyObject.ypoints[0], null);
 	}
 	
 	public String toString() {
-		return getElementID() + " " + getX() + " " + getY();
+		return id + "@" + getX() + "@" + getY() + "@" + dx + "@" + dy;
 	}
 }

@@ -1,6 +1,5 @@
 package networking;
 
-import game.Game;
 import gui.Main;
 
 import java.io.IOException;
@@ -15,11 +14,10 @@ public class Server implements Runnable {
     
     private Server() {}
     
-    public static void startServer(Game game) {
+    public static void startServer() {
     	Thread t = new Thread(new Server());
     	t.start();
     }
-
     
 	public static void sendToEveryone(String msg) {
 		for(int i=0; i < connectionSize; i++)

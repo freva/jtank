@@ -18,14 +18,15 @@ public class Game extends JPanel implements Runnable {
 	private int dTime = 1, minFPS = 10;
 	private PlayerControls input = new PlayerControls();
 	private JProgressBar progress;
-	private boolean isHost;
 	
 	public Game(boolean isHost, String nickname){	
-		player = new Tank(550, 100, nickname);
-		objects.add(player);
+		if(isHost) {
+			player = new Tank(550, 100, nickname);
+			objects.add(player);
+		}
+		
 		progress = new JProgressBar(JProgressBar.VERTICAL, 0, 80);
 		this.add(progress);
-		this.isHost = isHost;
 
 		Thread t = new Thread(this);
 		t.start();
@@ -39,11 +40,10 @@ public class Game extends JPanel implements Runnable {
 			startTime = System.currentTimeMillis();
 			
 			input.checkInput();
-	       // if(isHost) 
-	        	for(int j=0; j<objects.size(); j++) objects.get(j).tick(dTime);
+			for(int j=0; j<objects.size(); j++) objects.get(j).tick(dTime);
 	        repaint();
-	        
-			if(System.currentTimeMillis()-startTime < minFPS){
+
+	        if(System.currentTimeMillis()-startTime < minFPS){
 				try {
 					Thread.sleep(minFPS);
 				} catch (InterruptedException e) {
@@ -80,12 +80,20 @@ public class Game extends JPanel implements Runnable {
     	return player;
     }
     
+    public static void setPlayer(Tank t) {
+    	player = t;
+    }
+    
     public static void addElement(AbstractElementary ae){
     	objects.add(ae);
     }
     
     public static void removeElement(AbstractElementary ae){
     	objects.remove(ae);
+    }
+    
+    public static ArrayList<AbstractElementary> getElements() {
+    	return objects;
     }
     
     public static void addAnimation(Animation ani){

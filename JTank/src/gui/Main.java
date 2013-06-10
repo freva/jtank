@@ -2,7 +2,6 @@ package gui;
 
 import gui.menus.AbstractMenu;
 import gui.menus.MenuMain;
-import gui.menus.MenuMultiplayer;
 
 import java.awt.Color;
 import javax.swing.JFrame;
@@ -13,7 +12,7 @@ public class Main{
 	public static JFrame mainFrame;
 	public static final int GAME_WIDTH = 1280, GAME_HEIGHT = 720, maxNumPlayers=10;
 	
-	private static String version = "r19";
+	private static String version = "r20";
 	private AbstractMenu menuMain;
 	private JLayeredPane lp;
 	

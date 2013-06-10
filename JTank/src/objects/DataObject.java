@@ -10,16 +10,18 @@ import javax.imageio.ImageIO;
 
 public enum DataObject implements DataInterface {
 	//top left, top right, bottom right, bottom left
-	TANK("tank.png", new int[]{-8, 7, 25, -26}, new int[]{-12, -12, 11, 11});
+	TANK(0, "tank.png", new int[]{-8, 7, 25, -26}, new int[]{-12, -12, 11, 11});
 	
 	private Image image;
 	private Polygon polyObject;
-	private DataObject(String filename, int[] dimensionsX, int[] dimensionsY){
+	private int id;
+	private DataObject(int id, String filename, int[] dimensionsX, int[] dimensionsY){
 		try {
 			image = ImageIO.read(Main.class.getResource("res/objects/" + filename));
 		} catch (IOException e) { e.printStackTrace(); }
 		
 		polyObject = new Polygon(dimensionsX, dimensionsY, dimensionsX.length);
+		this.id = id;
 	}
 	
 	public Image getImage() {
@@ -28,5 +30,9 @@ public enum DataObject implements DataInterface {
 	
 	public Polygon getPolyObject() {
 		return polyObject;
+	}
+
+	public int getID() {
+		return id;
 	}
 }

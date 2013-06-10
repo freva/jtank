@@ -10,14 +10,14 @@ import java.io.IOException;
 import javax.imageio.ImageIO;
 
 public enum DataWeapon implements DataInterface {
-	BULLET("bullet.png", "bulletIcon.png", new int[]{-2, 2, 2, -2}, new int[]{-2, -2, 2, 2}, 15, 0, DataAnimation.EXPLOSION_SMALL),
-	GRENADE("grenade.png", "grenade.png",  new int[]{-6, 5, 5, -6}, new int[]{-7, -7, 7, 7}, 30, 5000, DataAnimation.EXPLOSION_MEDIUM);
+	BULLET(1, "bullet.png", "bulletIcon.png", new int[]{-2, 2, 2, -2}, new int[]{-2, -2, 2, 2}, 15, 0, DataAnimation.EXPLOSION_SMALL),
+	GRENADE(2, "grenade.png", "grenade.png",  new int[]{-6, 5, 5, -6}, new int[]{-7, -7, 7, 7}, 30, 5000, DataAnimation.EXPLOSION_MEDIUM);
 	
 	private Image image, imageIcon;
 	private Polygon polyObject;
-	private int power, lifeTime;
+	private int power, lifeTime, id;
 	private DataAnimation da;
-	private DataWeapon(String filename, String filenameIcon, int[] dimensionsX, int[] dimensionsY, int power, int lifeTime, DataAnimation da){
+	private DataWeapon(int id, String filename, String filenameIcon, int[] dimensionsX, int[] dimensionsY, int power, int lifeTime, DataAnimation da){
 		try {
 			image = ImageIO.read(Main.class.getResource("res/objects/" + filename));
 			imageIcon = ImageIO.read(Main.class.getResource("res/objects/" + filenameIcon));
@@ -27,6 +27,7 @@ public enum DataWeapon implements DataInterface {
 		this.power = power;
 		this.lifeTime = lifeTime;
 		this.da = da;
+		this.id = id;
 	}
 	
 	public Image getImage() {
@@ -51,5 +52,9 @@ public enum DataWeapon implements DataInterface {
 	
 	public DataAnimation getAnimation(){
 		return da;
+	}
+
+	public int getID() {
+		return id;
 	}
 }
