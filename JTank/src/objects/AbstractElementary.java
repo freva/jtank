@@ -29,7 +29,7 @@ public abstract class AbstractElementary {
 		move();
 		checkGroundCollision();
 		
-		if(x > Main.GAME_WIDTH+100 || x < -100 || y > Main.GAME_HEIGHT+100 || y < -100) Game.removeElement(this);
+		if(x > Main.GAME_WIDTH+100 || x < -100 || y > Main.GAME_HEIGHT+100 || y < -100) Game.getInstance().removeElement(this);
 	}
 	
 	protected void checkGroundCollision(){
@@ -124,6 +124,8 @@ public abstract class AbstractElementary {
 	public int getY() {
 		return (int) y;
 	}
+	
+	public abstract void explode();
 	
 	public void paint(Graphics g) {
 		g.drawImage(image, this.getX()+polyObject.xpoints[3], this.getY()+polyObject.ypoints[0], null);

@@ -11,25 +11,25 @@ import java.util.concurrent.ConcurrentHashMap;
 import javax.swing.JPanel;
 import javax.swing.JProgressBar;
 
-import networking.Client;
-
 import objects.Tank;
 import objects.AbstractElementary;
 
-public class Game extends JPanel implements Runnable {
-	private static Tank player;
+public abstract class Game extends JPanel implements Runnable {
+	protected static Tank player;
 	private static ConcurrentHashMap<String, AbstractElementary> objects = new ConcurrentHashMap<String, AbstractElementary>();
 	private static ArrayList<Animation> animations = new ArrayList<Animation>();
 	private int dTime = 1, minFPS = 10;
 	private PlayerControls input = new PlayerControls();
 	private JProgressBar progress;
+	private static Game game;
 	
-	public Game(boolean isHost, String nickname){	
+	public Game(String nickname){	
 		player = new Tank(550, 100, nickname);
 		objects.put(nickname, player);
 
 		progress = new JProgressBar(JProgressBar.VERTICAL, 0, 80);
 		this.add(progress);
+		this.game = this;
 
 		Thread t = new Thread(this);
 		t.start();
@@ -79,36 +79,43 @@ public class Game extends JPanel implements Runnable {
         progress.setLocation(20, 550);
     }
     
-    public static Tank getPlayer(){
+    public Tank getPlayer(){
     	return player;
     }
     
-    public static void setPlayer(Tank t) {
+    public void setPlayer(Tank t) {
     	player = t;
     }
     
-    public static void addElement(AbstractElementary ae){
+    public void addElement(AbstractElementary ae){
     	objects.put(ae.getElementID(), ae);
-    	if(ae.getElementID().indexOf(player.getUsername()) == 0) Client.addUpdate("1£" + ae.toString());
     }
     
-    public static void removeElement(AbstractElementary ae){
+    public void removeElement(AbstractElementary ae){
     	objects.remove(ae.getElementID());
     }
     
-    public static AbstractElementary getElement(String elementID){
+	public void explodeElement(AbstractElementary ae) {
+		ae.explode();
+	}
+	
+    public AbstractElementary getElement(String elementID){
     	return objects.get(elementID);
     }
     
-    public static Collection<AbstractElementary> getElements() {
+    public Collection<AbstractElementary> getElements() {
     	return objects.values();
     }
     
-    public static void addAnimation(Animation ani){
+    public void addAnimation(Animation ani){
     	animations.add(ani);
     }
     
-    public static void removeAnimation(Animation ani){
+    public void removeAnimation(Animation ani){
     	animations.remove(ani);
+    }
+    
+    public static Game getInstance() {
+    	return game;
     }
 }

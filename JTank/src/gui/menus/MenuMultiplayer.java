@@ -1,6 +1,6 @@
 package gui.menus;
 
-import game.Game;
+import game.GameMultiplayer;
 import game.Level;
 import game.LevelData;
 import gui.Main;
@@ -155,6 +155,7 @@ public class MenuMultiplayer extends AbstractMenu {
 						new Client(IPAddressField.getText(), NicknameField.getText());
 
 						Main.main.hideMenu();
+						Main.mainFrame.add(new GameMultiplayer(NicknameField.getText(), false));
 					} catch (ConnectException e1) {
 						JOptionPane.showMessageDialog(Main.mainFrame, "Could not reach " + IPAddressField.getText(), "Error", JOptionPane.ERROR_MESSAGE);
 					}
@@ -171,7 +172,7 @@ public class MenuMultiplayer extends AbstractMenu {
 				Level.setInstance(LevelData.Mantis);
 				
 				Main.main.hideMenu();
-				Main.mainFrame.add(new Game(true, NicknameField.getText()));
+				Main.mainFrame.add(new GameMultiplayer(NicknameField.getText(), true));
 				Server.startServer();
 			}
 		}

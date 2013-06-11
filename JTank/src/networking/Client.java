@@ -1,8 +1,8 @@
 package networking;
 
 import game.Game;
+import game.GameMultiplayer;
 import game.Level;
-import gui.Main;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -14,7 +14,6 @@ import java.net.ConnectException;
 import java.net.Socket;
 
 import javax.swing.Timer;
-import objects.Tank;
 import tools.Base64Coder;
 
 public class Client {
@@ -22,7 +21,6 @@ public class Client {
 	private BufferedReader inputReader;
 	private String receivedData;
 	private Socket socket;
-	private static StringBuilder allUpdates = new StringBuilder();
 	
 	public Client(String server, String username) throws ConnectException{
 	     try{
@@ -31,11 +29,7 @@ public class Client {
 	    	 inputReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 	    	 
 		     sendMessage(username);
-		     Level.setInstance(Base64Coder.decode(inputReader.readLine()), Base64Coder.decode(inputReader.readLine()));	     
-		     Main.mainFrame.add(new Game(false, username));
-		     
-		     String[] dataObjects = inputReader.readLine().split("£");
-		     for(int i=0; i<dataObjects.length; i++) ObjectUpdater.interpretObject(dataObjects[i]);		     
+		     Level.setInstance(Base64Coder.decode(inputReader.readLine()), Base64Coder.decode(inputReader.readLine()));
 	     }catch(ConnectException e){ throw new ConnectException();
 	     }catch(IOException e){e.printStackTrace();}
 	    
@@ -47,26 +41,21 @@ public class Client {
 		outputWriter.println(msg);
 	}
 	
-	public static void addUpdate(String update) {
-		allUpdates.append(update + "%");
-	}
-	
 	class ClientUpdater implements ActionListener {
 		public void actionPerformed(ActionEvent arg0) {
-			allUpdates.append("1£" + Game.getPlayer().toString());
-			sendMessage(allUpdates.toString());
-			allUpdates = new StringBuilder();
+			GameMultiplayer.addUpdate("1£" + Game.getInstance().getPlayer().toString());
+			sendMessage(GameMultiplayer.getUpdates());
 		}
 	}
 	
 	class ClientListener implements Runnable {
 		public void run(){
 			try {
-				while((receivedData = inputReader.readLine()) != null){
-					String[] dataObjects = receivedData.split("£");
-					for(int i=0; i<dataObjects.length; i++) ObjectUpdater.interpretObject(dataObjects[i]);
-				}
+				Thread.sleep(500);
+				while((receivedData = inputReader.readLine()) != null) NetworkParser.parseData(receivedData);
 			} catch(IOException e){
+				e.printStackTrace();
+			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
 		}

@@ -12,7 +12,7 @@ public class Main{
 	public static JFrame mainFrame;
 	public static final int GAME_WIDTH = 1280, GAME_HEIGHT = 720, maxNumPlayers=10;
 	
-	private static String version = "r21";
+	private static String version = "r22";
 	private AbstractMenu menuMain;
 	private JLayeredPane lp;
 	

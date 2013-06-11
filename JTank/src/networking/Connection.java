@@ -19,7 +19,6 @@ public class Connection implements Runnable {
     private PrintWriter outputWriter;
     private BufferedReader inputReader;
     private String username;
-	private StringBuilder sb = new StringBuilder();
 
 	/* Code User
 	 * 0 - Message
@@ -28,41 +27,32 @@ public class Connection implements Runnable {
 	 */
     public Connection(Socket socket) {
         this.socket = socket;
+        
+        try {
+			outputWriter = new PrintWriter(socket.getOutputStream(), true);
+			inputReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+	        
+	        username = inputReader.readLine();
+	        System.out.println(username + " has connected");
+	        
+	        outputWriter.println(Base64Coder.encodeLines(Level.getInstance().getBackgroundByteArray()));
+	        outputWriter.println(Base64Coder.encodeLines(Level.getInstance().getLevelByteArray()));
+	        
+	        StringBuilder sb = new StringBuilder();
+	        for(AbstractElementary ae : Game.getInstance().getElements()) sb.append("1£" + ae.toString()+ "%");
+	        sb.deleteCharAt(sb.length()-1);
+	        outputWriter.println(sb.toString());
+	        
+	        Server.addPlayer(this, new Tank(0, 0, username));
+		} catch(IOException e) {
+			e.printStackTrace();
+		}
     }
 
     public void run() {
     	String receivedData;
     	try {
-    		outputWriter = new PrintWriter(socket.getOutputStream(), true);
-            inputReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-            
-            username = inputReader.readLine();
-            System.out.println(username + " has connected");
-            
-            outputWriter.println(Base64Coder.encodeLines(Level.getInstance().getBackgroundByteArray()));
-            outputWriter.println(Base64Coder.encodeLines(Level.getInstance().getLevelByteArray()));
-            
-            for(AbstractElementary ae : Game.getElements()){
-            	sb.append(ae.toString());
-            	sb.append("£");
-            }
-            
-            outputWriter.println(sb.toString());
-            
-    		while((receivedData = inputReader.readLine()) != null){
-    			String[] data = receivedData.split("%");
-    			
-    			for(int i=0; i<data.length; i++){
-    				String[] temp = data[i].split("£");
-    				
-    				switch(Integer.parseInt(temp[0])){
-        			case 1:
-        				ObjectUpdater.interpretObject(temp[1]);
-        			break;
-        			
-        			}
-    			}
-    		}
+    		while((receivedData = inputReader.readLine()) != null) NetworkParser.parseData(receivedData);
     		
     		socket.close();
     	} catch (SocketException e) { e.printStackTrace();
