@@ -1,6 +1,6 @@
 package gui.menus;
 
-import game.Game;
+import game.GameSingleplayer;
 import game.Level;
 import game.LevelData;
 import gui.Main;
@@ -67,7 +67,7 @@ public class MenuMain extends AbstractMenu {
 			Level.setInstance(LevelData.Mantis);
 			
 			Main.main.hideMenu();
-			Main.mainFrame.add(new Game(true, "Limon"));
+			Main.mainFrame.add(new GameSingleplayer("Limon"));
 		}
 	}
 	

@@ -20,7 +20,7 @@ public class Animation {
 	public void drawFrame(Graphics g){
 		int curFrame = (int) (System.currentTimeMillis()-startTime)>>7;
 		if(curFrame == da.getNumFrames()) {
-			Game.removeAnimation(this);
+			Game.getInstance().removeAnimation(this);
 			return;
 		}
 		

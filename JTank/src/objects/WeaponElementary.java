@@ -8,6 +8,7 @@ public class WeaponElementary extends AbstractElementary {
 	private long startTime;
 	private DataWeapon dw;
 	private String elementID;
+	private int timeToLive;
 	
 	public WeaponElementary(float x, float y, float deg, float speed, DataWeapon dw) {
 		super(x, y, dw);
@@ -15,7 +16,8 @@ public class WeaponElementary extends AbstractElementary {
 
 		this.dw = dw;
 		this.startTime = System.currentTimeMillis();
-		this.elementID = Game.getPlayer().getElementID() + (System.currentTimeMillis()%10000);
+		this.elementID = Game.getInstance().getPlayer().getElementID() + (System.currentTimeMillis()%10000);
+		this.timeToLive = dw.getLifeTime();
 	}
 	
 	public WeaponElementary(float x, float y, float dx, float dy, DataWeapon dw, String elementID){
@@ -23,27 +25,28 @@ public class WeaponElementary extends AbstractElementary {
 		setSpeed(dx, dy);
 		
 		this.dw = dw;
-		this.startTime = startTime+5000;
+		this.startTime = System.currentTimeMillis();
 		this.elementID = elementID;
+		this.timeToLive = dw.getLifeTime() + 5000;
 	}
 
-	protected void explode() {
-		Game.removeElement(this);
-		Game.addAnimation(new Animation(getX(), getY(), dw.getAnimation()));
+	public void explode() {
+		Game.getInstance().removeElement(this);
+		Game.getInstance().addAnimation(new Animation(getX(), getY(), dw.getAnimation()));
 		Level.getInstance().drawCircle(getX(), getY(), dw.getPower());
 	}
 	
 	protected void checkGroundCollision() {
-		if(dw.getLifeTime() != 0) {
+		if(timeToLive != 0) {
 			super.checkGroundCollision();
 			
-			if(System.currentTimeMillis()-startTime > dw.getLifeTime()) explode();
+			if(System.currentTimeMillis()-startTime > timeToLive) Game.getInstance().explodeElement(this);
 		} else {
 			boolean[] collision = getCollisionSides();
 			
 			for(int i=0; i<collision.length; i++) 
 				if(collision[i]) {
-					this.explode();
+					Game.getInstance().explodeElement(this);
 					return;
 				}
 		}

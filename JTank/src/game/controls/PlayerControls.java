@@ -27,15 +27,15 @@ public class PlayerControls implements KeyListener {
 	public void keyTyped(KeyEvent arg0) { }
 	
 	public void checkInput(){
-		if(pressed[playerControls[0]]) Game.getPlayer().accelMove(-3);
-		if(pressed[playerControls[1]]) Game.getPlayer().rotate(0.03125f);
-		if(pressed[playerControls[2]]) Game.getPlayer().accelMove(3);
-		if(pressed[playerControls[3]]) Game.getPlayer().rotate(-0.03125f);
+		if(pressed[playerControls[0]]) Game.getInstance().getPlayer().accelMove(-3);
+		if(pressed[playerControls[1]]) Game.getInstance().getPlayer().rotate(0.03125f);
+		if(pressed[playerControls[2]]) Game.getInstance().getPlayer().accelMove(3);
+		if(pressed[playerControls[3]]) Game.getInstance().getPlayer().rotate(-0.03125f);
 		if(!pressed[playerControls[4]] && duration[playerControls[4]]!=0) {
-			Game.getPlayer().fireWeapon((int) duration[playerControls[4]]);
+			Game.getInstance().getPlayer().fireWeapon((int) duration[playerControls[4]]);
 			duration[playerControls[4]] = 0;
 		}
-		if(pressed[playerControls[5]]) Game.getPlayer().nextWeapon();
+		if(pressed[playerControls[5]]) Game.getInstance().getPlayer().nextWeapon();
 	}
 	
 	public long getTimeKeyDown(int key){

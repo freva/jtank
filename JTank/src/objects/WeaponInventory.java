@@ -15,7 +15,7 @@ public class WeaponInventory {
 	
 	public void fire(float x, float y, float deg, int strength) {
 		if(isMore()){
-			Game.addElement(new WeaponElementary(x, y, deg, strength, dw));
+			Game.getInstance().addElement(new WeaponElementary(x, y, deg, strength, dw));
 			amount--;
 		}
 	}

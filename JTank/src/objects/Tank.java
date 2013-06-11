@@ -60,6 +60,10 @@ public class Tank extends AbstractElementary {
 		return strength;
 	}
 	
+	public void explode() {
+		
+	}
+	
 	public void nextWeapon(){
 		if(System.currentTimeMillis() - lastShift < cooldown) return;
 		do {
