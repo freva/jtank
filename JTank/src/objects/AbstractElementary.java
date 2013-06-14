@@ -9,7 +9,7 @@ import game.Level;
 import gui.Main;
 
 public abstract class AbstractElementary {
-	protected float x, y, dx, dy, dt, collisionDamping = 0.6f, groundFriction = 0.6f;
+	protected float x, y, dx, dy, dt, collisionDamping = 0.6f, groundFriction = 0.9f;
 	protected Polygon polyObject;
 	protected Image image;
 	private int id;
@@ -34,7 +34,7 @@ public abstract class AbstractElementary {
 	
 	protected void checkGroundCollision(){
 		boolean[] collision = getCollisionSides(), temp=collision.clone();
-		
+
 		if(!(collision[0] || collision[1] || collision [2] || collision[3])) return;
 		float max = Math.max(Math.abs(dx), Math.abs(dy));
 		float ddx = (dx/max), ddy = (dy/max);
@@ -124,14 +124,13 @@ public abstract class AbstractElementary {
 	public int getY() {
 		return (int) y;
 	}
-	
-	public abstract void explode();
-	
+		
 	public void paint(Graphics g) {
 		g.drawImage(image, this.getX()+polyObject.xpoints[3], this.getY()+polyObject.ypoints[0], null);
 	}
 	
 	public abstract String getElementID();
+	public abstract void explode();
 	
 	public String toString() {
 		return getElementID() + "@" + id + "@" + getX() + "@" + getY() + "@" + dx + "@" + dy;

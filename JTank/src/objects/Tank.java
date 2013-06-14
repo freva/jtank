@@ -1,5 +1,6 @@
 package objects;
 
+import game.Level;
 import gui.Main;
 
 import java.awt.Font;
@@ -12,16 +13,14 @@ import javax.imageio.ImageIO;
 public class Tank extends AbstractElementary {
 	private float deg = 0;
 	private Image crosshair, sign, heart;
-	private int maxSpeed = 6, cooldown = 300, hitpoints = 150, crosshairDist = 80, crosshairX = 64, crosshairY = -16, currentWeapon = 0;
-	private long lastShot = 0, lastShift = 0;
+	private int hitpoints = 150, crosshairDist = 80, crosshairX = 64, crosshairY = -16, currentWeapon = 0;
 	private String username;
-	private boolean moved = false;
 	private WeaponInventory[] weapons = new WeaponInventory[] {new WeaponInventory(-1, DataWeapon.BULLET), new WeaponInventory(5, DataWeapon.GRENADE)};
 	
 	public Tank(float x, float y, String username){
 		super(x, y, DataObject.TANK);
 		collisionDamping=0.4f;
-		setSpeed(20, 0);
+		setSpeed(20, -20);
 		this.username = username;
 		
 		try {
@@ -38,17 +37,12 @@ public class Tank extends AbstractElementary {
 	}
 	
 	public void accelMove(float dSpeed){
-		if(Math.abs(dx+dSpeed) > maxSpeed) return;
-		dx += dSpeed;
-		moved = true;
+		if(isOnGround()) dx += dSpeed;
 	}
 	
 	public void fireWeapon(int strength) {
-		if(System.currentTimeMillis() - lastShot < cooldown) return;
 		strength = trimStrength(strength);
-
 		weapons[currentWeapon].fire(x, y, deg, strength);
-		lastShot = System.currentTimeMillis();
 		
 		while(!weapons[currentWeapon].isMore()) currentWeapon = (currentWeapon+1)%weapons.length;
 	}
@@ -65,27 +59,32 @@ public class Tank extends AbstractElementary {
 	}
 	
 	public void nextWeapon(){
-		if(System.currentTimeMillis() - lastShift < cooldown) return;
 		do {
 			currentWeapon = (currentWeapon+1)%weapons.length;
 		} while(!weapons[currentWeapon].isMore());
-		lastShift = System.currentTimeMillis();
 	}
 	
 	@Override
 	protected void checkGroundCollision() {
-		if(moved){
+		if(isOnGround()){
 			float tempY = y;
 			boolean[] collision = getCollisionSides();
 			
-			for(int i=0; i<5 && (collision[0] || collision[1] || collision [2] || collision[3]); i++, y--) collision = getCollisionSides();
+			for(int i=0; i<7 && (collision[0] || collision[1] || collision [2] || collision[3]); i++, y--) collision = getCollisionSides();
 			
-			if((collision[0] || collision[1] || collision [2] || collision[3])) {
+			if(collision[0] || collision[1] || collision [2] || collision[3]) {
 				y=tempY;
 				super.checkGroundCollision();	
+			} else {
+				dx *= groundFriction;
+				y+=2;
+				dy = 0;
 			}
-			moved = false;
 		} else super.checkGroundCollision();
+	}
+	
+	public boolean isOnGround() {
+		return Level.getInstance().isGroundAt(getX()+polyObject.xpoints[2], getY()+polyObject.ypoints[3]+5) || Level.getInstance().isGroundAt(getX()+polyObject.xpoints[3], getY()+polyObject.ypoints[3]+5);
 	}
 
 	public void paint(Graphics g) {

@@ -1,6 +1,7 @@
 package game;
 
 import game.controls.PlayerControls;
+import gui.Main;
 import gui.animation.Animation;
 
 import java.awt.Graphics;
@@ -37,7 +38,7 @@ public abstract class Game extends JPanel implements Runnable {
 	
 	public void run(){
 		long startTime = System.currentTimeMillis();
-		bindGameKeys();
+		Main.mainFrame.addKeyListener(input);
 		
 		while(true){
 			startTime = System.currentTimeMillis();
@@ -58,12 +59,6 @@ public abstract class Game extends JPanel implements Runnable {
 		}
 	}
 	
-	private void bindGameKeys() {
-		this.setFocusable(true);
-		this.requestFocus();
-		this.addKeyListener(input);
-	}
-	
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
         g.drawImage(Level.getInstance().getBackgroundImage(), 0, 0, null);
@@ -72,11 +67,11 @@ public abstract class Game extends JPanel implements Runnable {
         for(AbstractElementary ae : objects.values()) ae.paint(g);
         for(int i=0; i<animations.size(); i++) animations.get(i).drawFrame(g);
     
-        g.drawString("FPS: " + 1000/dTime, 10, 15);
+        //g.drawString("FPS: " + 1000/dTime, 10, 15);
         
-        int timeDown = player.trimStrength((int) (System.currentTimeMillis()-input.getTimeKeyDown(32)))-10;
+        int timeDown = player.trimStrength(input.getTimeKeyDown(32))-10;
         progress.setValue(timeDown);
-        progress.setLocation(20, 550);
+        progress.setLocation(1240, 550);
     }
     
     public Tank getPlayer(){

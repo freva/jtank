@@ -7,7 +7,8 @@ import gui.Main;
 public enum LevelData {
 	KingKong("KingKong.png", "skies_bg.png"), 
 	Mantis("Mantis.png", "skies_bg.png"), 
-	Medieval("Medieval.png", "skies_bg.png");
+	Medieval("Medieval.png", "skies_bg.png"),
+	FlatLand("FlatLand.png", "skies_bg.png");
 	
 	private URL levelFileURL, backgroundFileURL;
 	LevelData(String levelFileURL, String backgroundFileURL){
