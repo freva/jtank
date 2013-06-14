@@ -1,6 +1,7 @@
 package networking;
 
 import game.Game;
+import game.GameMultiplayer;
 import game.Level;
 
 import java.io.BufferedReader;
@@ -22,8 +23,8 @@ public class Connection implements Runnable {
 
 	/* Code User
 	 * 0 - Message
-	 * 1 - Change player status
-	 * 2 - Object update
+	 * 1 - AbstractElementary update&creation
+	 * 2 - AbstractElementary uptate+deletion
 	 */
     public Connection(Socket socket) {
         this.socket = socket;
@@ -33,8 +34,7 @@ public class Connection implements Runnable {
 			inputReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 	        
 	        username = inputReader.readLine();
-	        System.out.println(username + " has connected");
-	        
+	       	        
 	        outputWriter.println(Base64Coder.encodeLines(Level.getInstance().getBackgroundByteArray()));
 	        outputWriter.println(Base64Coder.encodeLines(Level.getInstance().getLevelByteArray()));
 	        
@@ -52,13 +52,33 @@ public class Connection implements Runnable {
     public void run() {
     	String receivedData;
     	try {
-    		while((receivedData = inputReader.readLine()) != null) NetworkParser.parseData(receivedData);
+    		while((receivedData = inputReader.readLine()) != null) {
+    			String[] data = receivedData.split("%");
+    			for(int i=0; i<data.length; i++){
+    				String[] temp = data[i].split("£");
+    				
+    				if(temp[1].indexOf(Game.getInstance().getPlayer().getUsername()) == 0) continue;
+    				switch(Integer.parseInt(temp[0])){
+    				case 0: 
+    					NetworkParser.parseMessage(temp[1]);
+    					GameMultiplayer.addUpdate(data[i]);
+    				break;
+    				case 1:
+    					NetworkParser.parseObject(temp[1]);
+    				break;
+    				case 2:
+    					NetworkParser.parseDestroy(temp[1]);
+    				break;
+    				
+    				}
+    			}
+    		}
     		
     		socket.close();
     	} catch (SocketException e) { e.printStackTrace();
     	} catch (IOException e) { e.printStackTrace();
         } finally {
-    		System.out.println("Closing connection with " + username);
+        	GameMultiplayer.addUpdate("0£SERVER@" + username + " has left the game.");
         	Server.removeClientFromList(username);
     	}
     }

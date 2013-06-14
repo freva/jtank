@@ -1,6 +1,7 @@
 package networking;
 
 import game.Game;
+import gui.chat.Chat;
 import objects.AbstractElementary;
 import objects.DataWeapon;
 import objects.Tank;
@@ -14,6 +15,9 @@ public class NetworkParser {
 			
 			if(temp[1].indexOf(Game.getInstance().getPlayer().getUsername()) == 0) continue;
 			switch(Integer.parseInt(temp[0])){
+			case 0: 
+				parseMessage(temp[1]);
+			break;
 			case 1:
 				parseObject(temp[1]);
 			break;
@@ -25,6 +29,11 @@ public class NetworkParser {
 		}
 	}
 	
+	
+	public static void parseMessage(String s) {
+		String[] msg = s.split("@");
+		Chat.getInstance().addMessage(msg[0], msg[1]);
+	}
 	
 	public static void parseObject(String s){
 		String[] data = s.split("@");

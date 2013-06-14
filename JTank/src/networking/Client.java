@@ -52,6 +52,7 @@ public class Client {
 		public void run(){
 			try {
 				Thread.sleep(500);
+		        GameMultiplayer.addUpdate("0£SERVER@" + Game.getInstance().getPlayer().getUsername() + " has joined the game.");
 				while((receivedData = inputReader.readLine()) != null) NetworkParser.parseData(receivedData);
 			} catch(IOException e){
 				e.printStackTrace();

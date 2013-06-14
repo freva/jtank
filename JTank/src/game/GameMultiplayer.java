@@ -1,5 +1,7 @@
 package game;
 
+import gui.chat.Chat;
+
 import objects.AbstractElementary;
 
 public class GameMultiplayer extends Game {
@@ -10,6 +12,8 @@ public class GameMultiplayer extends Game {
 		super(nickname);
 		
 		this.isHost = isHost;
+		this.add(Chat.getInstance());
+
 	}
 	
 	public static void addUpdate(String update) {
