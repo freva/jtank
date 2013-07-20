@@ -11,8 +11,7 @@ import javax.swing.JPanel;
 public class ChatCurrent extends JPanel {
 	private static JLabel[] chatHistory = new JLabel[] {new JLabel(), new JLabel(), new JLabel(), new JLabel(), new JLabel()};
 	private static long[] duration  = new long[chatHistory.length];
-	private int chatHistoryDuration = 5000;
-	
+
 	public ChatCurrent() {
 		this.setOpaque(false);
 		
@@ -41,7 +40,7 @@ public class ChatCurrent extends JPanel {
 			duration[i] = duration[i+1];
 		}
 		chatHistory[chatHistory.length-1].setText(message);
-		duration[duration.length-1] = System.currentTimeMillis() + chatHistoryDuration;
+		duration[duration.length-1] = System.currentTimeMillis() + 5000;
 	}
 	
 	protected void paintComponent(Graphics g) {

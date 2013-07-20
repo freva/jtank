@@ -1,11 +1,9 @@
 package gui.chat;
 
 import game.Game;
-import game.GameMultiplayer;
 
 import javax.swing.JPanel;
 import java.awt.GridBagLayout;
-import java.awt.Graphics;
 import java.awt.Color;
 import java.awt.GridBagConstraints;
 import java.awt.event.ActionEvent;
@@ -59,10 +57,6 @@ public class Chat extends JPanel {
 		if(chat != null) chat.showChatBox(cc.isVisible());
 	}
 	
-	public static void paintChat(Graphics g){
-		chat.paintComponent(g);
-	}
-	
 	public static Chat getInstance() {
 		if(chat == null) chat = new Chat();
 		return chat;
@@ -71,7 +65,7 @@ public class Chat extends JPanel {
 	public static class MessageInput implements ActionListener {
 		public void actionPerformed(ActionEvent arg0) {
 			if(ch.getInputText().length() != 0) {
-				GameMultiplayer.addUpdate("0£" + Game.getInstance().getPlayer().getUsername() + "@" + ch.getInputText());
+				Game.getInstance().addUpdate("0Â£" + Game.getInstance().getPlayer().getUsername() + "@" + ch.getInputText());
 				Chat.getInstance().addMessage(Game.getInstance().getPlayer().getUsername(), ch.getInputText());
 				ch.clearInputText();
 			}

@@ -1,8 +1,5 @@
 package gui.menus;
 
-import game.GameSingleplayer;
-import game.Level;
-import game.LevelData;
 import gui.Main;
 
 import javax.swing.ImageIcon;
@@ -31,55 +28,52 @@ public class MenuMain extends AbstractMenu {
 		gbc_imageLogo.gridy = 1;
 		add(logo, gbc_imageLogo);
 		
-		JButton btnSingleplayer = new JButton("Singleplayer");
-		btnSingleplayer.setFont(new Font("Tahoma", Font.PLAIN, 16));
-		btnSingleplayer.addActionListener(new Singleplayer());
-		GridBagConstraints gbc_btnSingleplayer = new GridBagConstraints();
-		gbc_btnSingleplayer.fill = GridBagConstraints.BOTH;
-		gbc_btnSingleplayer.insets = new Insets(5, 0, 5, 0);
-		gbc_btnSingleplayer.gridx = 1;
-		gbc_btnSingleplayer.gridy = 2;
-		add(btnSingleplayer, gbc_btnSingleplayer);
-		
-		JButton btnMultiplayer = new JButton("Multiplayer");
-		btnMultiplayer.setFont(new Font("Tahoma", Font.PLAIN, 16));
-		btnMultiplayer.addActionListener(new Multiplayer());
-		GridBagConstraints gbc_btnMultiplayer = new GridBagConstraints();
-		gbc_btnMultiplayer.fill = GridBagConstraints.BOTH;
-		gbc_btnMultiplayer.insets = new Insets(5, 0, 5, 0);
-		gbc_btnMultiplayer.gridx = 1;
-		gbc_btnMultiplayer.gridy = 3;
-		add(btnMultiplayer, gbc_btnMultiplayer);
+		JButton btnPlay = new JButton("Play");
+		btnPlay.setFont(new Font("Tahoma", Font.PLAIN, 16));
+		btnPlay.addActionListener(new Play());
+		GridBagConstraints gbc_btnPlay = new GridBagConstraints();
+		gbc_btnPlay.fill = GridBagConstraints.BOTH;
+		gbc_btnPlay.insets = new Insets(5, 0, 5, 0);
+		gbc_btnPlay.gridx = 1;
+		gbc_btnPlay.gridy = 2;
+		add(btnPlay, gbc_btnPlay);
 		
 		JButton btnOptions = new JButton("Options");
-		btnOptions.addActionListener(new Options());
 		btnOptions.setFont(new Font("Tahoma", Font.PLAIN, 16));
+		btnOptions.addActionListener(new Options());
 		GridBagConstraints gbc_btnOptions = new GridBagConstraints();
 		gbc_btnOptions.fill = GridBagConstraints.BOTH;
 		gbc_btnOptions.insets = new Insets(5, 0, 5, 0);
 		gbc_btnOptions.gridx = 1;
-		gbc_btnOptions.gridy = 4;
+		gbc_btnOptions.gridy = 3;
 		add(btnOptions, gbc_btnOptions);
+		
+		JButton btnExit = new JButton("Exit");
+		btnExit.addActionListener(new Exit());
+		btnExit.setFont(new Font("Tahoma", Font.PLAIN, 16));
+		GridBagConstraints gbc_btnExit = new GridBagConstraints();
+		gbc_btnExit.fill = GridBagConstraints.BOTH;
+		gbc_btnExit.insets = new Insets(5, 0, 5, 0);
+		gbc_btnExit.gridx = 1;
+		gbc_btnExit.gridy = 4;
+		add(btnExit, gbc_btnExit);
 	}
 	
-	class Singleplayer implements ActionListener {
+	class Play implements ActionListener {
 		public void actionPerformed(ActionEvent arg0) {
-			Level.setInstance(LevelData.Mantis);
-			
-			Main.main.hideMenu();
-			Main.mainFrame.add(new GameSingleplayer("Limon"));
-		}
-	}
-	
-	class Multiplayer implements ActionListener {
-		public void actionPerformed(ActionEvent arg0) {
-			Main.main.addMenuToForeground(new MenuMultiplayer());
+			Main.main.addMenuToForeground(new MenuPlay());
 		}
 	}
 	
 	class Options implements ActionListener {
 		public void actionPerformed(ActionEvent arg0) {
 
+		}
+	}
+	
+	class Exit implements ActionListener {
+		public void actionPerformed(ActionEvent arg0) {
+			System.exit(0);
 		}
 	}
 }

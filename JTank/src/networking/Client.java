@@ -1,7 +1,6 @@
 package networking;
 
 import game.Game;
-import game.GameMultiplayer;
 import game.Level;
 
 import java.awt.event.ActionEvent;
@@ -19,12 +18,10 @@ import tools.Base64Coder;
 public class Client {
 	private static PrintWriter outputWriter;
 	private BufferedReader inputReader;
-	private String receivedData;
-	private Socket socket;
-	
+
 	public Client(String server, String username) throws ConnectException{
 	     try{
-	    	 socket = new Socket(server, 10001);
+			 Socket socket = new Socket(server, 10001);
 	    	 outputWriter = new PrintWriter(socket.getOutputStream(), true);
 	    	 inputReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 	    	 
@@ -43,8 +40,8 @@ public class Client {
 	
 	class ClientUpdater implements ActionListener {
 		public void actionPerformed(ActionEvent arg0) {
-			GameMultiplayer.addUpdate("1£" + Game.getInstance().getPlayer().toString());
-			sendMessage(GameMultiplayer.getUpdates());
+			Game.getInstance().addUpdate("1Â£" + Game.getInstance().getPlayer().toString());
+			sendMessage(Game.getInstance().getUpdates());
 		}
 	}
 	
@@ -52,7 +49,7 @@ public class Client {
 		public void run(){
 			try {
 				Thread.sleep(500);
-		        GameMultiplayer.addUpdate("0£SERVER@" + Game.getInstance().getPlayer().getUsername() + " has joined the game.");
+				String receivedData;
 				while((receivedData = inputReader.readLine()) != null) NetworkParser.parseData(receivedData);
 			} catch(IOException e){
 				e.printStackTrace();

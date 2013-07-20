@@ -10,15 +10,15 @@ import java.io.IOException;
 import javax.imageio.ImageIO;
 
 public enum DataWeapon implements DataInterface {
-	BULLET(1, "bullet.png", "bulletIcon.png", new int[]{-2, 2, 2, -2}, new int[]{-2, -2, 2, 2}, 15, 0, DataAnimation.EXPLOSION_SMALL),
-	GRENADE(2, "grenade.png", "grenade.png",  new int[]{-6, 5, 5, -6}, new int[]{-7, -7, 7, 7}, 30, 5000, DataAnimation.EXPLOSION_MEDIUM);
+	BULLET(1, "bullet.png", "bulletIcon.png", new int[]{-2, 2, 2, -2}, new int[]{-2, -2, 2, 2}, 15, 0, DataAnimation.EXPLOSION_SMALL, 0, null),
+	GRENADE(2, "grenade.png", "grenade.png",  new int[]{-6, 5, 5, -6}, new int[]{-7, -7, 7, 7}, 30, 5000, DataAnimation.EXPLOSION_MEDIUM, 0, null);
 	
 	private Image image, imageIcon;
 	private Polygon polyObject;
-	private int power, lifeTime, id;
+	private int power, lifeTime, id, separateNum;
 	private DataAnimation da;
-	private static DataWeapon[] weapons = new DataWeapon[] {null, DataWeapon.BULLET, DataWeapon.GRENADE};
-	private DataWeapon(int id, String filename, String filenameIcon, int[] dimensionsX, int[] dimensionsY, int power, int lifeTime, DataAnimation da){
+	private DataWeapon separateInto;
+	private DataWeapon(int id, String filename, String filenameIcon, int[] dimensionsX, int[] dimensionsY, int power, int lifeTime, DataAnimation da, int separateNum, DataWeapon separateInto){
 		try {
 			image = ImageIO.read(Main.class.getResource("res/objects/" + filename));
 			imageIcon = ImageIO.read(Main.class.getResource("res/objects/" + filenameIcon));
@@ -29,6 +29,8 @@ public enum DataWeapon implements DataInterface {
 		this.lifeTime = lifeTime;
 		this.da = da;
 		this.id = id;
+		this.separateNum = separateNum;
+		this.separateInto = separateInto;
 	}
 	
 	public Image getImage() {
@@ -59,8 +61,16 @@ public enum DataWeapon implements DataInterface {
 		return id;
 	}
 	
+	public int getSeparateNum() {
+		return separateNum;
+	}
+
+	public DataWeapon getSeparateInto() {
+		return separateInto;
+	}
+
 	public static DataWeapon getWeapon(int id){
-		if(id < 1 || id >= weapons.length) return null;
-		else return weapons[id];
+		if(id < 1 || id > DataWeapon.values().length) return null;
+		else return DataWeapon.values()[id-1];
 	}
 }

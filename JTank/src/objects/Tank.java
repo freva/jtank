@@ -13,14 +13,16 @@ import javax.imageio.ImageIO;
 public class Tank extends AbstractElementary {
 	private float deg = 0;
 	private Image crosshair, sign, heart;
-	private int hitpoints = 150, crosshairDist = 80, crosshairX = 64, crosshairY = -16, currentWeapon = 0;
+	private int hitpoints = 150;
+	private int crosshairX = 64;
+	private int crosshairY = -16;
+	private int currentWeapon = 0;
 	private String username;
 	private WeaponInventory[] weapons = new WeaponInventory[] {new WeaponInventory(-1, DataWeapon.BULLET), new WeaponInventory(5, DataWeapon.GRENADE)};
 	
 	public Tank(float x, float y, String username){
 		super(x, y, DataObject.TANK);
-		collisionDamping=0.4f;
-		setSpeed(20, -20);
+		collisionDamping = 0.4f;
 		this.username = username;
 		
 		try {
@@ -32,8 +34,8 @@ public class Tank extends AbstractElementary {
 	
 	public void rotate(float deg){
 		this.deg += deg;
-		crosshairX = (int) (Math.cos(this.deg)*crosshairDist)-16;
-		crosshairY = (int) (Math.sin(this.deg)*crosshairDist)-16;
+		crosshairX = (int) (Math.cos(this.deg)*80)-16;
+		crosshairY = (int) (Math.sin(this.deg)*80)-16;
 	}
 	
 	public void accelMove(float dSpeed){
@@ -84,7 +86,7 @@ public class Tank extends AbstractElementary {
 	}
 	
 	public boolean isOnGround() {
-		return Level.getInstance().isGroundAt(getX()+polyObject.xpoints[2], getY()+polyObject.ypoints[3]+5) || Level.getInstance().isGroundAt(getX()+polyObject.xpoints[3], getY()+polyObject.ypoints[3]+5);
+		return Level.getInstance().isGroundAt(polyObject.xpoints[2], polyObject.ypoints[3]+5) || Level.getInstance().isGroundAt(polyObject.xpoints[3], polyObject.ypoints[3]+5);
 	}
 
 	public void paint(Graphics g) {
@@ -118,9 +120,21 @@ public class Tank extends AbstractElementary {
 	public void setAmmoForWeapon(int weaponID, int amount){
 		weapons[weaponID].setAmount(amount);
 	}
+
+	public void setHitpoints(int hitpoints) {
+		this.hitpoints = hitpoints;
+	}
+
+	public void decreaseHitpoints(int hitpoints) {
+		this.hitpoints -= hitpoints;
+	}
+
+	public void doDamage(WeaponElementary we){
+		decreaseHitpoints(we.getMaxDamage()/(int)Math.round(Math.sqrt(Math.pow(getX()-we.getX(), 2) + Math.pow(getX()-we.getX(), 2))+0.5));
+	}
 	
 	public String toString(){
-		return super.toString() + "@" + deg + "@" + currentWeapon + "@" + weapons[currentWeapon].getAmount();
+		return super.toString() + "@" + deg + "@" + currentWeapon + "@" + weapons[currentWeapon].getAmount() + "@" + hitpoints;
 	}
 	
 	public String getElementID() {

@@ -48,8 +48,7 @@ public class Level {
 	}
 	
 	public boolean isGroundAt(int x, int y){
-		if(x<0 || y<0 || x>=Main.GAME_WIDTH || y>=Main.GAME_HEIGHT) return false;
-		return (levelBuffered.getRGB(x, y)>>24) != 0;
+		return !(x < 0 || y < 0 || x >= Main.GAME_WIDTH || y >= Main.GAME_HEIGHT) && (levelBuffered.getRGB(x, y) >> 24) != 0;
 	}
 	
 	public byte[] getLevelByteArray() {

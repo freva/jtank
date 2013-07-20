@@ -10,7 +10,7 @@ public class WeaponElementary extends AbstractElementary {
 	private String elementID;
 	
 	public WeaponElementary(float x, float y, float deg, float speed, DataWeapon dw) {
-		super(x, y, dw);
+		super(x+(28+dw.getPolyObject().xpoints[2])*(float) Math.cos(deg), y+(13+dw.getPolyObject().ypoints[2])*(float) Math.sin(deg), dw);
 		setSpeed((float) Math.cos(deg)*speed, (float) Math.sin(deg)*speed);
 
 		this.dw = dw;
@@ -27,10 +27,16 @@ public class WeaponElementary extends AbstractElementary {
 		this.elementID = elementID;
 	}
 
+	public void tick(int dt) {
+		super.tick(dt);
+		checkTankCollision();
+	}
+
 	public void explode() {
 		Game.getInstance().removeElement(this);
 		Game.getInstance().addAnimation(new Animation(getX(), getY(), dw.getAnimation()));
 		Level.getInstance().drawCircle(getX(), getY(), dw.getPower());
+		Game.getInstance().getPlayer().doDamage(this);
 	}
 	
 	protected void checkGroundCollision() {
@@ -40,16 +46,43 @@ public class WeaponElementary extends AbstractElementary {
 			if(System.currentTimeMillis() > endTime) Game.getInstance().explodeElement(this);
 		} else {
 			boolean[] collision = getCollisionSides();
-			
-			for(int i=0; i<collision.length; i++) 
-				if(collision[i]) {
+
+			for (boolean aCollision : collision)
+				if (aCollision) {
 					Game.getInstance().explodeElement(this);
 					return;
 				}
 		}
 	}
 
+	private void checkTankCollision() {
+		if(! Game.getInstance().isOwnedByMe(this)) return;
+
+		for(AbstractElementary ae : Game.getInstance().getElements())
+			if(ae instanceof Tank){
+				Tank t = (Tank) ae;
+				if(Math.abs(t.getX()-getX()) > getMaxDamage() || Math.abs(t.getY()-getY()) > getMaxDamage()) continue;
+
+				if(dw.getLifeTime() == 0) {
+					if(t.collidesWith(this, true)) Game.getInstance().explodeElement(this);
+				} else {
+					boolean[] collisions = new boolean[polyObject.npoints];
+					boolean doesCollide = false;
+					for(int i=0; i<polyObject.npoints; i++) {
+						collisions[i] = Game.getInstance().getPlayer().intersectsAt(polyObject.xpoints[i], polyObject.ypoints[i]);
+						doesCollide = doesCollide || collisions[i];
+					}
+
+					if(doesCollide) adjustSpeed(collisions);
+				}
+			}
+	}
+
 	public String getElementID() {
 		return elementID;
+	}
+
+	public int getMaxDamage(){
+		return dw.getPower()<<2;
 	}
 }
