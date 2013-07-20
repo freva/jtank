@@ -9,9 +9,10 @@ import game.Level;
 import gui.Main;
 
 public abstract class AbstractElementary {
-	protected float x, y, dx, dy, dt, collisionDamping = 0.6f, groundFriction = 0.9f;
+	protected float x, y, dx, dy, dt, collisionDamping = 0.6f, groundFriction = 0.98f;
 	protected Polygon polyObject;
 	protected Image image;
+	protected int[] originalOffsetX, originalOffsetY;
 	private int id;
 	
 	public AbstractElementary(float x, float y, DataInterface di){
@@ -19,7 +20,11 @@ public abstract class AbstractElementary {
 		this.y = y;
 		this.id = di.getID();
 		image = di.getImage();
-		polyObject = di.getPolyObject();
+
+		originalOffsetX = di.getPolyObject().xpoints.clone();
+		originalOffsetY = di.getPolyObject().ypoints.clone();
+
+		polyObject = new Polygon(originalOffsetX, originalOffsetY, originalOffsetX.length);
 	}
 	
 	public void tick(int dt){
@@ -28,6 +33,11 @@ public abstract class AbstractElementary {
 		accelerate(0, 3);		
 		move();
 		checkGroundCollision();
+
+		for(int i=0; i<originalOffsetY.length; i++){
+			polyObject.xpoints[i] = getX() + originalOffsetX[i];
+			polyObject.ypoints[i] = getY() + originalOffsetY[i];
+		}
 		
 		if(x > Main.GAME_WIDTH+100 || x < -100 || y > Main.GAME_HEIGHT+100 || y < -100) Game.getInstance().removeElement(this);
 	}
@@ -43,28 +53,32 @@ public abstract class AbstractElementary {
 			collision = getCollisionSides();
 		} while(collision[0] || collision[1] || collision [2] || collision[3]);
 		
+		adjustSpeed(temp);
+	}
+
+	protected void adjustSpeed(boolean[] collisions){
 		int xMul=0, yMul=0;
 		for(int i=0; i<4; i++){
-			if(temp[i]){
-				xMul += Math.signum(polyObject.xpoints[i]);
-				yMul += Math.signum(polyObject.ypoints[i]);
+			if(collisions[i]){
+				xMul += Math.signum(originalOffsetX[i]);
+				yMul += Math.signum(originalOffsetY[i]);
 			}
 		}
-		
+
 		if(xMul==0) xMul = 1;
 		else xMul = (int) -Math.signum(xMul * dx);
-		
+
 		if(yMul==0) yMul = 1;
 		else yMul = (int) -Math.signum(yMul * dy);
 
-		
+
 		if(xMul==1 && dy < 10) multiplySpeed(groundFriction, groundFriction);
 		else multiplySpeed(xMul*collisionDamping, yMul*collisionDamping);
 	}
 	
 	protected boolean[] getCollisionSides() {
 		boolean[] collision = new boolean[4];
-		for(int i=0; i<collision.length; i++) collision[i] = Level.getInstance().isGroundAt(getX()+polyObject.xpoints[i], getY()+polyObject.ypoints[i]);
+		for(int i=0; i<collision.length; i++) collision[i] = Level.getInstance().isGroundAt(getX()+originalOffsetX[i], getY()+originalOffsetY[i]);
 		return collision;
 	}
 	
@@ -97,11 +111,6 @@ public abstract class AbstractElementary {
 		this.dy = dy;
 	}
 	
-	public void setRelativeSpeed(float dx, float dy){
-		this.dx += dx;
-		this.dy += dy;
-	}
-	
 	public void multiplySpeed(float mulX, float mulY){
 		this.dx *= mulX;
 		this.dy *= mulY;
@@ -126,7 +135,7 @@ public abstract class AbstractElementary {
 	}
 		
 	public void paint(Graphics g) {
-		g.drawImage(image, this.getX()+polyObject.xpoints[3], this.getY()+polyObject.ypoints[0], null);
+		g.drawImage(image, polyObject.xpoints[3], polyObject.ypoints[0], null);
 	}
 	
 	public abstract String getElementID();

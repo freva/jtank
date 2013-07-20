@@ -7,13 +7,14 @@ import java.awt.Color;
 import javax.swing.JFrame;
 import javax.swing.JLayeredPane;
 
+import static javax.swing.JFrame.*;
+
 public class Main{
 	public static Main main;
 	public static JFrame mainFrame;
 	public static final int GAME_WIDTH = 1280, GAME_HEIGHT = 720, maxNumPlayers=10;
 	
-	private static String version = "r23";
-	private AbstractMenu menuMain;
+	private static String version = "r25";
 	private JLayeredPane lp;
 	
 	public static void main(String[] args) {
@@ -22,14 +23,14 @@ public class Main{
 	}
 	
 	public void init(){
-		menuMain = new MenuMain();
+		AbstractMenu menuMain = new MenuMain();
 		lp = new JLayeredPane();
 		lp.add(menuMain, new Integer(0));
 
 		mainFrame = new JFrame();
 		mainFrame.add(lp);
 		mainFrame.setTitle("JTanks " + version);
-		mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		mainFrame.setDefaultCloseOperation(EXIT_ON_CLOSE);
 		mainFrame.setResizable(false);
 		mainFrame.getContentPane().setBackground(Color.gray);
 		mainFrame.pack();
@@ -44,11 +45,13 @@ public class Main{
 	}
 	
 	public void addMenuToForeground(AbstractMenu am){
+		lp.getComponent(lp.highestLayer()).setVisible(false);
 		lp.add(am, new Integer(lp.highestLayer()+1));
 	}
 	
 	public void removeTopMenu() {
 		lp.remove(new Integer(lp.highestLayer()-1));
+		lp.getComponent(lp.highestLayer()).setVisible(true);
 		lp.repaint();
 	}
 }

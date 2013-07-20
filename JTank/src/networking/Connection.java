@@ -1,7 +1,6 @@
 package networking;
 
 import game.Game;
-import game.GameMultiplayer;
 import game.Level;
 
 import java.io.BufferedReader;
@@ -39,11 +38,12 @@ public class Connection implements Runnable {
 	        outputWriter.println(Base64Coder.encodeLines(Level.getInstance().getLevelByteArray()));
 	        
 	        StringBuilder sb = new StringBuilder();
-	        for(AbstractElementary ae : Game.getInstance().getElements()) sb.append("1£" + ae.toString()+ "%");
+	        for(AbstractElementary ae : Game.getInstance().getElements()) sb.append("1Â£").append(ae.toString()).append("%");
 	        sb.deleteCharAt(sb.length()-1);
 	        outputWriter.println(sb.toString());
 	        
 	        Server.addPlayer(this, new Tank(0, 0, username));
+	        Server.announce(username + " has joined the game.");
 		} catch(IOException e) {
 			e.printStackTrace();
 		}
@@ -53,32 +53,15 @@ public class Connection implements Runnable {
     	String receivedData;
     	try {
     		while((receivedData = inputReader.readLine()) != null) {
-    			String[] data = receivedData.split("%");
-    			for(int i=0; i<data.length; i++){
-    				String[] temp = data[i].split("£");
-    				
-    				if(temp[1].indexOf(Game.getInstance().getPlayer().getUsername()) == 0) continue;
-    				switch(Integer.parseInt(temp[0])){
-    				case 0: 
-    					NetworkParser.parseMessage(temp[1]);
-    					GameMultiplayer.addUpdate(data[i]);
-    				break;
-    				case 1:
-    					NetworkParser.parseObject(temp[1]);
-    				break;
-    				case 2:
-    					NetworkParser.parseDestroy(temp[1]);
-    				break;
-    				
-    				}
-    			}
+    			NetworkParser.parseData(receivedData);
+    			Game.getInstance().addUpdate(receivedData.substring(0, receivedData.length()-1));
     		}
     		
     		socket.close();
-    	} catch (SocketException e) { e.printStackTrace();
+    	} catch (SocketException e) {
     	} catch (IOException e) { e.printStackTrace();
         } finally {
-        	GameMultiplayer.addUpdate("0£SERVER@" + username + " has left the game.");
+        	Server.announce(username + " has left the game.");
         	Server.removeClientFromList(username);
     	}
     }

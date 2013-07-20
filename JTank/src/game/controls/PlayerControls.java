@@ -11,8 +11,7 @@ public class PlayerControls implements KeyListener {
 	private boolean[] newAction = new boolean[256];
 	private long[] duration = new long[256];
 	private long[] cooldown = new long[256];
-	private int cooldownWait = 25;
- 	
+
 	//Move left, angle up, move right, angle down, fire
 	private int[] playerControls = new int[]{37, 38, 39, 40, 32, 16, 10};
 
@@ -24,7 +23,7 @@ public class PlayerControls implements KeyListener {
 		
 		if(System.currentTimeMillis() > cooldown[arg0.getKeyCode()]) {
 			newAction[arg0.getKeyCode()] = true;
-			cooldown[arg0.getKeyCode()] = System.currentTimeMillis()+cooldownWait;
+			cooldown[arg0.getKeyCode()] = System.currentTimeMillis()+ 25;
 		} 
 	}
 
@@ -55,8 +54,8 @@ public class PlayerControls implements KeyListener {
 			duration[playerControls[6]] = 0;
 			Chat.changeChatBoxState();
 		}
-		
-		for(int i=0; i<playerControls.length; i++) newAction[playerControls[i]] = false;
+
+		for (int playerControl : playerControls) newAction[playerControl] = false;
 	}
 	
 	public boolean isMoving() {

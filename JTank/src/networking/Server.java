@@ -1,8 +1,8 @@
 package networking;
 
 import game.Game;
-import game.GameMultiplayer;
 import gui.Main;
+import gui.chat.Chat;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -15,43 +15,40 @@ import javax.swing.Timer;
 import objects.Tank;
 
 public class Server implements Runnable {
-	private static Tank[] players = new Tank[Main.maxNumPlayers+1];
 	private static Connection[] connections = new Connection[Main.maxNumPlayers];
-    private static ServerSocket serverSocket;
-    private static int connectionSize = 0;
+	private static int connectionSize = 0;
     
     private Server() {}
     
     public static void startServer() {
     	new Thread(new Server()).start();
-    	players[0] = Game.getInstance().getPlayer();
     }
     
 	public static void sendToEveryone(String msg) {
 		for(int i=0; i < connectionSize; i++)
 			connections[i].sendData(msg);
     }
-	
-	public static void sendToEveryoneExcept(String source, String msg) {
-		for(int i=0; i < connectionSize; i++)
-			if(!connections[i].getUsername().equals(source)) connections[i].sendData(msg);
-    }
-    
+
 	public static void removeClientFromList(String username){
 		for(int i=0; i < connectionSize; i++)
 			if(connections[i].getUsername().equals(username)) connections[connectionSize--] = connections[i];
+		Game.getInstance().removeElement(Game.getInstance().getElement(username));
     }
 	
 	public static void addPlayer(Connection con, Tank player){
 		connections[connectionSize++] = con;
-		players[connectionSize] = player;
 		Game.getInstance().addElement(player);
+	}
+	
+	public static void announce(String msg){
+        Game.getInstance().addUpdate("0£SERVER@" + msg);
+        Chat.getInstance().addMessage("SERVER", msg);
 	}
 
 	@Override
 	public void run() {
-		 try {        	
-			 serverSocket = new ServerSocket(10001);
+		 try {
+			 ServerSocket serverSocket = new ServerSocket(10001);
 			 new Timer(100, new ServerUpdater()).start();
 
 			 while(true) {
@@ -67,8 +64,8 @@ public class Server implements Runnable {
 	
 	class ServerUpdater implements ActionListener {
 		public void actionPerformed(ActionEvent arg0) {
-			for(int i=0; i<=connectionSize; i++) GameMultiplayer.addUpdate("1�" + players[i].toString());
-			sendToEveryone(GameMultiplayer.getUpdates());
+			Game.getInstance().addUpdate("1£" + Game.getInstance().getPlayer().toString());
+			sendToEveryone(Game.getInstance().getUpdates());
 		}
 	}
 }

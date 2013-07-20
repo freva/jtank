@@ -10,21 +10,21 @@ import objects.WeaponElementary;
 public class NetworkParser {
 	public static void parseData(String s) {
 		String[] data = s.split("%");
-		for(int i=0; i<data.length; i++){
-			String[] temp = data[i].split("£");
-			
-			if(temp[1].indexOf(Game.getInstance().getPlayer().getUsername()) == 0) continue;
-			switch(Integer.parseInt(temp[0])){
-			case 0: 
-				parseMessage(temp[1]);
-			break;
-			case 1:
-				parseObject(temp[1]);
-			break;
-			case 2:
-				parseDestroy(temp[1]);
-			break;
-			
+		for (String aData : data) {
+			String[] temp = aData.split("Â£");
+
+			if (temp[1].indexOf(Game.getInstance().getPlayer().getUsername()) == 0) continue;
+			switch (Integer.parseInt(temp[0])) {
+				case 0:
+					parseMessage(temp[1]);
+					break;
+				case 1:
+					parseObject(temp[1]);
+					break;
+				case 2:
+					parseDestroy(temp[1]);
+					break;
+
 			}
 		}
 	}
@@ -51,6 +51,7 @@ public class NetworkParser {
 			t.setDeg(Float.parseFloat(data[6]));
 			t.setCurrentWeapon(Integer.parseInt(data[7]));
 			t.setAmmoForWeapon(Integer.parseInt(data[7]), Integer.parseInt(data[8]));
+			t.setHitpoints(Integer.parseInt(data[9]));
 		} else {
 			Game.getInstance().addElement(new WeaponElementary(Float.parseFloat(data[2]), Float.parseFloat(data[3]), Float.parseFloat(data[4]), Float.parseFloat(data[5]), DataWeapon.getWeapon(Integer.parseInt(data[1])), data[0]));
 		}
